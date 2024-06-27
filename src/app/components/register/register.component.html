@@ -1,0 +1,58 @@
+<div class="h-screen w-full justify-content-center align-content-center">
+    <div class="flex flex justify-content-center align-content-center">
+        <div class="card " style="width: 50%; background-color: rgba(79, 77, 77, 0.102); border-radius: 10px;">
+            <div class="flex flex-column md:flex-row">
+                @if (loaderState.loading) {
+                    <div class="flex justify-content-center align-content-center py-5 px-5">
+                        <app-loader [state]="loaderState.state"></app-loader>
+                    </div>
+                }
+                <div [class.hidden]="loaderState.loading" class="w-full md:w-5 flex flex-column">
+                    <div class="flex justify-content-center error">
+                        {{errorMessage}}
+                    </div>
+                    <div class="w-full flex flex-row align-items-center justify-content-center my-2 flex-wrap gap-3">
+                        <div class="flex align-items-center">
+                            <p-radioButton 
+                                name="paciente" 
+                                value="paciente" 
+                                [(ngModel)]="role" 
+                                inputId="paciente" />
+                            <label for="paciente" class="ml-2">
+                                Paciente
+                            </label>
+                        </div>
+                        
+                        <div class="flex align-items-center">
+                            <p-radioButton 
+                                name="especialista" 
+                                value="especialista" 
+                                [(ngModel)]="role" 
+                                inputId="especialista" />
+                            <label for="especialista" class="ml-2">
+                                Especialista
+                            </label>
+                        </div>
+                    </div>
+                    @if (role == "paciente") {
+                        <app-form-register-paciente (onRegister)="onRegister($event)"></app-form-register-paciente>
+                    }
+                    @else if (role == "especialista") {
+                        <app-form-register-especialista (onRegister)="onRegister($event)"></app-form-register-especialista>
+                    }
+                </div>
+                <div class="w-full md:w-2">
+                    <p-divider layout="vertical" styleClass="hidden md:flex">
+                        <b>O</b>
+                    </p-divider>
+                    <p-divider layout="horizontal" styleClass="flex md:hidden" [align]="'center'">
+                        <b>O</b>
+                    </p-divider>
+                </div>
+                <div class="w-full md:w-5 flex align-items-center justify-content-center py-5">
+                    <p-button (onClick)="onLoginClick()" label="Ingresa" icon="pi pi-user" styleClass="p-button-success w-10rem" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

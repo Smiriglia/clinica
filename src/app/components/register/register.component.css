@@ -1,0 +1,7 @@
+.error {
+    color: rgb(172, 0, 0);
+}
+
+.hidden {
+    display: none !important;
+}
