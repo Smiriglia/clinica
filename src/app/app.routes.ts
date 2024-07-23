@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { isLoggedInGuard } from './guards/is-logged-in.guard';
 import { isNotLoggedInGuard } from './guards/is-not-logged-in.guard';
+import { isAdminGuard } from './guards/is-admin.guard';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: "full" },
@@ -10,6 +11,35 @@ export const routes: Routes = [
         ),
         canActivate: [isLoggedInGuard],
     },
+    {
+        path: 'mi-perfil', loadComponent: () => import('./components/mi-perfil/mi-perfil.component').then(
+            x => x.MiPerfilComponent
+        ),
+        canActivate: [isLoggedInGuard],
+    },
+
+
+    {
+        path: 'mis-turnos', loadComponent: () => import('./components/mis-turnos/mis-turnos.component').then(
+            x => x.MisTurnosComponent
+        ),
+        canActivate: [isLoggedInGuard],
+    },
+
+    {
+        path: 'turnos', loadComponent: () => import('./components/turnos/turnos.component').then(
+            x => x.TurnosComponent
+        ),
+        canActivate: [isAdminGuard],
+    },
+
+    {
+        path: 'solicitar-turno', loadComponent: () => import('./components/solicitar-turno/solicitar-turno.component').then(
+            x => x.SolicitarTurnoComponent
+        ),
+        canActivate: [isLoggedInGuard],
+    },
+
 
     {
         path: 'login', loadComponent: () => import('./components/login/login.component').then(
@@ -28,7 +58,8 @@ export const routes: Routes = [
     {
         path: 'welcome', loadComponent: () => import('./components/welcome/welcome.component').then(
             x => x.WelcomeComponent
-        )
+        ),
+        canActivate: [isNotLoggedInGuard],
     },
 
     {
@@ -38,9 +69,16 @@ export const routes: Routes = [
     },
 
     {
+        path: 'not-enabled', loadComponent: () => import('./components/not-enabled/not-enabled.component').then(
+            x => x.NotEnabledComponent
+        )
+    },
+
+    {
         path: 'users', loadComponent: () => import('./components/users/users.component').then(
             x => x.UsersComponent
-        )
+        ),
+        canActivate: [isAdminGuard],
     },
 
     {

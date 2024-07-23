@@ -62,7 +62,7 @@ export class FormRegisterEspecialistaComponent {
         }),
         password: new FormControl("", [Validators.required, Validators.minLength(6), Validators.maxLength(18)]),
         rePassword: new FormControl("", [Validators.required]),
-        edad: new FormControl("1", [Validators.required, Validators.min(1)]),
+        edad: new FormControl("1", [Validators.required, Validators.min(18)]),
         imagenPerfil: new FormControl("", [Validators.required]),
         especialidades: new FormControl("", [Validators.required]),
       },

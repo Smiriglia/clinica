@@ -1,6 +1,7 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { IEspecialista } from '../interfaces/user.interface';
 
 export const isLoggedInGuard: CanActivateFn = async (route, state) => {
   const router = inject(Router)
@@ -11,7 +12,20 @@ export const isLoggedInGuard: CanActivateFn = async (route, state) => {
   if (isLoggedIn)
   {
     if(authService.userFire?.emailVerified)
+    {
+      const user = authService.currentUserSignal()!;
+      if(user.role == 'especialista')
+      {
+        const castedUser = user as IEspecialista;
+        if (castedUser.estaHabilitado)
+          return true;
+        else {
+          router.navigateByUrl('/not-enabled');
+          return false;
+        }
+      }
       return true;
+    }
     router.navigateByUrl('/verify-email');
     return false;
   }

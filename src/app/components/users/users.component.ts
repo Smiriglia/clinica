@@ -10,6 +10,7 @@ import { TableModule } from 'primeng/table';
 import { IAdmin, IEspecialista, IPaciente, IUser } from '../../interfaces/user.interface';
 import { FirestoreService } from '../../services/firestore.service';
 import { ButtonModule } from 'primeng/button';
+import { UserService } from '../../services/user.service';
 @Component({
   selector: 'app-users',
   standalone: true,
@@ -27,7 +28,7 @@ import { ButtonModule } from 'primeng/button';
 export class UsersComponent {
   authService = inject(AuthService);
   storageService = inject(StorageService);
-  firestoreService = inject(FirestoreService);
+  userService = inject(UserService);
 
   errorMessage = "";
 
@@ -134,7 +135,7 @@ export class UsersComponent {
     }
 
     async getUsers() {
-      this.firestoreService.getUsersByRole(this.role.label!)
+      this.userService.getUsersByRole(this.role.label!)
       .then( (users) => {
           this.users = users;
           if(users.length > 0) {
@@ -144,31 +145,15 @@ export class UsersComponent {
       );
   }
   
-  deshabilitar(user: IEspecialista) {
-    let userIndex = 0;
-    for (let i = 0; i < this.users.length; i++) {
-      if(user.uid == this.users[i].uid)
-      {
-        userIndex = i;
-        break
-      }
-    }
-
-
-    this.users[userIndex]['estaHabilitado'] = false;
-    console.log(this.users[userIndex]);
+  async deshabilitar(user: IEspecialista) {
+    const response = await this.userService.updateEstaHabilitado(user, false)
+    if(response) 
+      user.estaHabilitado = false;
   }
 
-  habilitar(user: IEspecialista) {
-    let userIndex = 0;
-    for (let i = 0; i < this.users.length; i++) {
-      if(user.uid == this.users[i].uid)
-      {
-        userIndex = i;
-        break
-      }
-    }
-    this.users[userIndex]['estaHabilitado'] = true;
-    console.log(this.users[userIndex]);
+  async habilitar(user: IEspecialista) {
+    const response = await this.userService.updateEstaHabilitado(user, true)
+    if(response) 
+      user.estaHabilitado = true;
   }
 }

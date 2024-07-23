@@ -5,13 +5,15 @@ import { Auth, User, createUserWithEmailAndPassword, sendEmailVerification, sign
 import { Observable, from } from 'rxjs';
 import { IUser } from '../interfaces/user.interface';
 import { FirestoreService } from './firestore.service';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   firebaseAuth = inject(Auth);
-  firestoreService = inject(FirestoreService)
+  firestoreService = inject(FirestoreService);
+  userService = inject(UserService);
 
   user$ = user(this.firebaseAuth);
   currentUserSignal = signal<IUser | null | undefined>(undefined);
@@ -23,7 +25,7 @@ export class AuthService {
         this.userFire = user;
         if (user)
         {
-          this.firestoreService.obtenerInfoUsuario(user.uid)
+          this.userService.obtenerInfoUsuario(user.uid)
           .then((finalUser) => {
                 this.currentUserSignal.set(finalUser);
           });
@@ -76,7 +78,7 @@ export class AuthService {
     while (typeof user === typeof undefined && time < timeLimit) {
       await new Promise(resolve => setTimeout(resolve, interval));
       user = this.currentUserSignal();
-      time += interval; 
+      time += interval;
     }
   
     if(user)
@@ -98,5 +100,4 @@ export class AuthService {
       return this.userFire.reload();
     return null;
   }
-
 }

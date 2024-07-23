@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
-export const isNotLoggedInGuard: CanActivateFn = async (route, state) => {
+export const isAdminGuard: CanActivateFn = async (route, state) => {
   const router = inject(Router)
   const authService = inject(AuthService)
   
@@ -10,8 +10,18 @@ export const isNotLoggedInGuard: CanActivateFn = async (route, state) => {
 
   if (isLoggedIn)
   {
-    router.navigateByUrl("/home");
+    if(authService.userFire?.emailVerified)
+    {
+      const user = authService.currentUserSignal()!;
+      if(user.role == 'admin')
+      {
+        return true;
+      }
+      return false;
+    }
+    router.navigateByUrl('/verify-email');
     return false;
   }
-  return true;
+
+  return false;
 };

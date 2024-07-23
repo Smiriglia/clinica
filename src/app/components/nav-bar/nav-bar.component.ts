@@ -15,7 +15,8 @@ export class NavBarComponent {
   authService = inject(AuthService);
   router = inject(Router);
   itemsUnLogged: MenuItem[] | undefined;
-  itemsLogged: MenuItem[] | undefined;
+  itemsEspecialista: MenuItem[] | undefined;
+  itemsPaciente: MenuItem[] | undefined;
   itemsAdmin: MenuItem[] | undefined;
 
   ngOnInit() {
@@ -26,10 +27,21 @@ export class NavBarComponent {
         { label: 'Welcome', icon: 'pi pi-users', routerLink: "/welcome"  },
         { label: 'Login', icon: 'pi pi-sign-in', routerLink: "/login"  },
       ];
-      this.itemsLogged = [
-        { label: 'Welcome', icon: 'pi pi-users', routerLink: "/welcome"  },
+
+      this.itemsPaciente = [
         { label: 'Home', icon: 'pi pi-home', routerLink: "/home" },
-        { label: 'Products', icon: 'pi pi-list', routerLink: "/example2"  },
+        { label: 'Perfil', icon: 'pi pi-user', routerLink: "/mi-perfil" },
+        { label: 'Mis Turnos', icon: 'pi pi-list', routerLink: "/mis-turnos"  },
+        { label: 'Solicitar Turno', icon: 'pi pi-plus-circle', routerLink: "/solicitar-turno"  },
+        { label: 'Salir', icon: 'pi pi-sign-out', command: () => {
+          this.authService.logOut();
+          this.router.navigateByUrl('/welcome')}  },
+      ];
+
+      this.itemsEspecialista = [
+        { label: 'Home', icon: 'pi pi-home', routerLink: "/home" },
+        { label: 'Perfil', icon: 'pi pi-user', routerLink: "/mi-perfil" },
+        { label: 'Mis Turnos', icon: 'pi pi-list', routerLink: "/mis-turnos"  },
         { label: 'Salir', icon: 'pi pi-sign-out', command: () => {
           this.authService.logOut();
           this.router.navigateByUrl('/welcome')}  },
@@ -37,7 +49,10 @@ export class NavBarComponent {
 
       this.itemsAdmin = [
         { label: 'Home', icon: 'pi pi-home', routerLink: "/home" },
+        { label: 'Perfil', icon: 'pi pi-user', routerLink: "/mi-perfil" },
         { label: 'Usuarios', icon: 'pi pi-users', routerLink: "/users" },
+        { label: 'Solicitar Turno', icon: 'pi pi-plus-circle', routerLink: "/solicitar-turno" },
+        { label: 'Turnos', icon: 'pi pi-list', routerLink: "/turnos" },
         { label: 'Salir', icon: 'pi pi-sign-out', command: () => {
           this.authService.logOut();
           this.router.navigateByUrl('/welcome')}  },
@@ -45,10 +60,14 @@ export class NavBarComponent {
   }
 
   getItems() {
-    if(this.authService.currentUserSignal() != null) {
-      if(this.authService.currentUserSignal()?.role == 'admin')
-        return this.itemsAdmin
-      return this.itemsLogged
+    const user = this.authService.currentUserSignal();
+    if(user != null) {
+      if(user.role == 'admin')
+        return this.itemsAdmin;
+      else if (user.role == 'especialista')
+        return this.itemsEspecialista;
+
+      return this.itemsPaciente
     }
     return this.itemsUnLogged;
   }

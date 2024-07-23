@@ -12,6 +12,7 @@ import { FormRegisterEspecialistaComponent } from '../form-register-especialista
 import { AuthService } from '../../services/auth.service';
 import { LoaderComponent } from '../loader/loader.component';
 import { StorageService } from '../../services/storage.service';
+import { RecaptchaModule } from 'ng-recaptcha';
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -22,7 +23,8 @@ import { StorageService } from '../../services/storage.service';
     RadioButtonModule,
     FormRegisterPacienteComponent,
     FormRegisterEspecialistaComponent,
-    LoaderComponent
+    LoaderComponent,
+    RecaptchaModule,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
@@ -31,12 +33,14 @@ export class RegisterComponent {
   router = inject(Router);
   authService = inject(AuthService);
   storageService = inject(StorageService);
+  
   role = "paciente";
   loaderState = {
     loading: false,
     state: "loading"
   }
   errorMessage = "";
+  token : string | null = null;
 
   onLoginClick() {
     this.router.navigateByUrl('login');
@@ -96,5 +100,9 @@ export class RegisterComponent {
           1500);
         }
       });
+  }
+
+  executeReCaptcha(token : string | null) {
+    this.token = token;
   }
 }

@@ -1,27 +1,54 @@
-# Clinica
+[![imagen-perfil](https://i.postimg.cc/W3ZqQdd2/registro.png)]
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.4.
 
-## Development server
+### Temas
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- Clinica
+- Sistema de turnos
+- Historia Clinica
 
-## Code scaffolding
+## Descripción del proyecto
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+<p align="justify">
+ Nuestra aplicación web nos permite tener una clinica con el ciclo completo de los turnos, pacientes y gestionarlos de los distintas pantallas dependiendo el rol que tengas
+</p>
 
-## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-## Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-## Running end-to-end tests
+## Funcionalidades
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+:heavy_check_mark: `Funcionalidad 1:` Registro
+[![venta-produc.png](https://i.postimg.cc/xdppC4js/registro.png)]
 
-## Further help
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+:heavy_check_mark: `Funcionalidad 2:` Solicitar Turno
+
+
+[![socilitar-turno.png](https://i.postimg.cc/W3CkhMkL/registro.png)]
+
+
+:heavy_check_mark: `Funcionalidad 3:` Ver y Gestionar Turnos
+
+
+[![turnos.png](https://i.postimg.cc/wBPXmKCG/registro.png)]
+
+
+:heavy_check_mark: `Funcionalidad 4:` Gestionar Usuarios
+
+
+[![usuarios.png](https://i.postimg.cc/3N9V7Jqq/registro.png)]
+
+
+## Acceso al proyecto
+
+Usted puede [acceder al codigo del proyecto](https://github.com/Smiriglia/clinica)
+
+
+
+## Creador
+-Fausto Smiriglia
+
+
+[![fausto.jpg](https://i.postimg.cc/BQdBbYHm/fausto.jpg)]

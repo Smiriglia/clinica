@@ -8,13 +8,13 @@
             <p-tabMenu [activeItem]="role" [model]="itemsRole" (activeItemChange)="onRoleChange($event)"  />
         </div>
         <div class="flex justify-content-center">
-            @if(action?.label == "Crear") {
+            @if(action.label == "Crear") {
                 <div class="w-5">
-                    @if(role?.label == 'paciente')
+                    @if(role.label == 'paciente')
                     {
                         <app-form-register-paciente (onRegister)="onRegister($event)"></app-form-register-paciente>
                     }
-                    @else if (role?.label == 'especialista') {
+                    @else if (role.label == 'especialista') {
                         <app-form-register-especialista (onRegister)="onRegister($event)"></app-form-register-especialista>
                     }
                     @else {
@@ -54,10 +54,10 @@
                                     <td>{{user.especialidades}}</td>
                                     <td>
                                         @if (user.estaHabilitado) {
-                                            <p-button (onClick)="habilitar(user)" label="Deshabilitar" icon="pi pi-arrow-down" iconPos="right" severity="danger" />
+                                            <p-button styleClass="w-full" (onClick)="deshabilitar(user)" label="Deshabilitar" icon="pi pi-arrow-down" iconPos="right" severity="danger" />
                                         }
                                         @else {
-                                            <p-button (onClick)="deshabilitar(user)" label="Habilitar" icon="pi pi-check" iconPos="right" severity="success" />
+                                            <p-button styleClass="w-full" (onClick)="habilitar(user)" label="Habilitar" icon="pi pi-check" iconPos="right" severity="success" />
                                         }
                                     </td>
                                 }
