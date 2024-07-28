@@ -1,4 +1,4 @@
-<div class="h-full card flex align-items-center justify-content-center">
+<div @routeAnimations class="h-full card flex align-items-center justify-content-center">
     <div class="w-8 flex flex-wrap px-5 py-5 gap-2 surface-ground border-round justify-content-center">
         @if(estaViendoHorarios)
         {
@@ -81,6 +81,9 @@
                         <h3 style="display: inline;">Obra Social:</h3>
                         {{user['obraSocial']}}
                     </div>
+                    <div class="flex align-content-center justify-content-center">
+                        <p-button (onClick)="verHistoriaClinica()" icon="pi pi-clock" label="Mi Historia Clinica"></p-button>
+                    </div>
                 }
                 @if(user.role == 'especialista') {
                     <div>
@@ -95,3 +98,14 @@
         }
     </div>
 </div>
+
+<p-dialog 
+        header="Historia Clinica" 
+        [modal]="true" 
+        [(visible)]="visibleHistoria" 
+        [style]="{ width: '50rem' }" 
+        [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" >
+        @if (visibleHistoria) {
+            <app-ver-historia-clinica [paciente]="getUserAsPaciente()"></app-ver-historia-clinica>
+        }
+</p-dialog>

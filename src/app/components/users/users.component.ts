@@ -11,6 +11,8 @@ import { IAdmin, IEspecialista, IPaciente, IUser } from '../../interfaces/user.i
 import { FirestoreService } from '../../services/firestore.service';
 import { ButtonModule } from 'primeng/button';
 import { UserService } from '../../services/user.service';
+import { DialogModule } from 'primeng/dialog';
+import { VerHistoriaClinicaComponent } from '../ver-historia-clinica/ver-historia-clinica.component';
 @Component({
   selector: 'app-users',
   standalone: true,
@@ -20,7 +22,9 @@ import { UserService } from '../../services/user.service';
     FormRegisterEspecialistaComponent,
     FormRegisterAdminComponent,
     TableModule,
-    ButtonModule
+    ButtonModule,
+    DialogModule,
+    VerHistoriaClinicaComponent,
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css'
@@ -40,7 +44,10 @@ export class UsersComponent {
 
   users: IUser[] = [];
 
-  userKeys : string[] = []
+  userKeys : string[] = [];
+
+  visibleHistoria = false;
+  pacienteSeleccionado! : IPaciente; 
 
   loaderState = {
     loading: false,
@@ -155,5 +162,54 @@ export class UsersComponent {
     const response = await this.userService.updateEstaHabilitado(user, true)
     if(response) 
       user.estaHabilitado = true;
+  }
+
+  verHistoriaClinica(paciente : IPaciente) {
+    this.visibleHistoria = true;
+    this.pacienteSeleccionado = paciente;
+  }
+
+  exportPacientesToCsv(filename: string = 'pacientes.csv'): void {
+    
+    const pacientes = this.users as IPaciente[];
+    
+    // Extract the headers from the first object
+    const headers = Object.keys(pacientes[0]);
+
+    // Create CSV content
+    const csvContent = pacientes.map(paciente => {
+      return headers.map(header => this.formatCsvValue(paciente[header])).join(',');
+    });
+
+    // Add headers as the first row
+    csvContent.unshift(headers.join(','));
+
+    // Join all lines into a single string with line breaks
+    const csvString = csvContent.join('\r\n');
+
+    // Create a Blob from the CSV string and download it
+    this.downloadCsv(csvString, filename);
+  }
+
+  private formatCsvValue(value: any): string {
+    if (typeof value === 'string') {
+      // Escape quotes by doubling them
+      return `"${value.replace(/"/g, '""')}"`;
+    }
+    return value;
+  }
+
+  private downloadCsv(csvString: string, filename: string): void {
+    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', filename);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   }
 }

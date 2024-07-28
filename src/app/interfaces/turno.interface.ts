@@ -1,4 +1,5 @@
 import { IPregunta } from "./encuesta.interface";
+import { IHistoriaClinica } from "./historia_clinica.interface";
 import { IEspecialista, IPaciente } from "./user.interface";
 
 export interface ITurno {
@@ -14,4 +15,5 @@ export interface ITurno {
     especialidad : string,
     paciente : IPaciente,
     encuesta : IPregunta[] | null,
+    historiaClinica? : IHistoriaClinica,
 }

@@ -12,6 +12,7 @@ import { ITurno } from '../../interfaces/turno.interface';
 import { TurnoService } from '../../services/turno.service';
 import { AuthService } from '../../services/auth.service';
 import { TableModule } from 'primeng/table';
+import { slideInRightAnimation } from '../../animations/animations';
 
 
 @Component({
@@ -27,7 +28,10 @@ import { TableModule } from 'primeng/table';
     TableModule,
   ],
   templateUrl: './solicitar-turno.component.html',
-  styleUrl: './solicitar-turno.component.css'
+  styleUrl: './solicitar-turno.component.css',
+  animations: [
+    slideInRightAnimation
+  ]
 })
 export class SolicitarTurnoComponent implements OnInit {
   userService = inject(UserService);

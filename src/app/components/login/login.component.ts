@@ -8,6 +8,7 @@ import { PasswordModule } from 'primeng/password';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { LoaderComponent } from '../loader/loader.component';
+import { scaleUpAnimation } from '../../animations/animations';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,10 @@ import { LoaderComponent } from '../loader/loader.component';
     PasswordModule,
     LoaderComponent],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.css',
+  animations: [
+    scaleUpAnimation
+  ]
 })
 export class LoginComponent {
   errorMessage = ""

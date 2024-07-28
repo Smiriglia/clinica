@@ -13,6 +13,7 @@ import { AuthService } from '../../services/auth.service';
 import { LoaderComponent } from '../loader/loader.component';
 import { StorageService } from '../../services/storage.service';
 import { RecaptchaModule } from 'ng-recaptcha';
+import { scaleUpAnimation, slideInAnimation } from '../../animations/animations';
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -27,7 +28,10 @@ import { RecaptchaModule } from 'ng-recaptcha';
     RecaptchaModule,
   ],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.css'
+  styleUrl: './register.component.css',
+  animations: [
+    scaleUpAnimation
+  ]
 })
 export class RegisterComponent {
   router = inject(Router);
