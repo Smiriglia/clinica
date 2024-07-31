@@ -12,7 +12,10 @@ import { ITurno } from '../../interfaces/turno.interface';
 import { TurnoService } from '../../services/turno.service';
 import { AuthService } from '../../services/auth.service';
 import { TableModule } from 'primeng/table';
-import { slideInRightAnimation } from '../../animations/animations';
+import { bounceInAnimation, fadeInAnimation, slideInRightAnimation, SlideUpAnimation } from '../../animations/animations';
+import { IHorarios } from '../../interfaces/horarios.interface';
+import { DateTurnPipe } from '../../pipes/date-turn.pipe';
+import { CaptchaDirective } from '../../directives/captcha.directive';
 
 
 @Component({
@@ -26,11 +29,15 @@ import { slideInRightAnimation } from '../../animations/animations';
     InputGroupModule,
     DropdownModule,
     TableModule,
+    CaptchaDirective,
   ],
   templateUrl: './solicitar-turno.component.html',
   styleUrl: './solicitar-turno.component.css',
   animations: [
-    slideInRightAnimation
+    slideInRightAnimation,
+    fadeInAnimation,
+    SlideUpAnimation,
+    bounceInAnimation,
   ]
 })
 export class SolicitarTurnoComponent implements OnInit {
@@ -38,6 +45,7 @@ export class SolicitarTurnoComponent implements OnInit {
   horariosService = inject(HorariosService);
   turnoService = inject(TurnoService);
   authService = inject(AuthService);
+  dateTurnPipe = inject(DateTurnPipe);
   especialistas: IEspecialista[] = [];
   turnos: ITurno[] = [];
   selectedEspecialista: IEspecialista | null = null;
@@ -50,6 +58,8 @@ export class SolicitarTurnoComponent implements OnInit {
   cantConsultorios = 6;
   selectedPaciente: IPaciente | null = null;
   users : IPaciente[] = [];
+  isCaptchaValid = false;
+  isCaptchaEnabled = true;
 
   dateOptions: any = {
     day: '2-digit',
@@ -128,12 +138,11 @@ export class SolicitarTurnoComponent implements OnInit {
   }
 
   getOptions() {
-    this.selectedEspecialista!.especialidades
     return this.selectedEspecialista!.especialidades;
   }
 
   changeEspecialidad(especialidad: any) {
-    this.selectedEspecialidad = especialidad.value;
+    this.selectedEspecialidad = especialidad;
   }
 
   getNext15Days() {
@@ -197,7 +206,14 @@ export class SolicitarTurnoComponent implements OnInit {
 
 
   getHorario(horario: string, fecha: Date): string {
-    return `${horario} (${this.getRemainingTurn(horario, fecha)})`;
+    const auxDate = new Date(fecha.getTime());
+    const splittedHorario = horario.split(':');
+    const hour = parseInt(splittedHorario[0]);
+    const minutes = parseInt(splittedHorario[1]);
+
+    auxDate.setHours(hour, minutes);
+
+    return `${this.dateTurnPipe.transform(auxDate)} (${this.getRemainingTurn(horario, fecha)})`;
   }
 
   solicitarTurno(fecha: Date, horario: string) {
@@ -226,4 +242,18 @@ export class SolicitarTurnoComponent implements OnInit {
       });
   }
 
+  getImgEspecialidad(especialidad : string) {
+    const especialidades = ['fisioterapia', 'psicologia', 'urologia'];
+    let aux = 'default';
+    const espLower = especialidad.toLowerCase();
+    if(especialidades.includes(espLower))
+      aux = espLower;
+
+    return `assets/especialidades/${aux}.png`;
+
+  }
+
+  onCaptchaValidated(isValid : boolean) {
+    this.isCaptchaValid = isValid;
+  }
 }

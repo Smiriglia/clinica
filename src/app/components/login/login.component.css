@@ -5,3 +5,10 @@
 .hidden {
     display: none !important;
 }
+
+.profile-button {
+    border-radius: 100%;
+    border: solid 2px white;
+    aspect-ratio: 4/4;
+    cursor: pointer;
+}

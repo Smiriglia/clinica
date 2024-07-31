@@ -1,3 +1,8 @@
 * {
     margin: 0;
 }
+
+.profile-picture {
+    aspect-ratio: 4/4;
+    border-radius: 100%;
+}

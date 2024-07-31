@@ -13,9 +13,7 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { FormHistoriaClinicaComponent } from '../form-historia-clinica/form-historia-clinica.component';
 import { IHistoriaClinica } from '../../interfaces/historia_clinica.interface';
-import { DatePipe } from '@angular/common';
 import { slideInAnimation } from '../../animations/animations';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
   selector: 'app-mis-turnos',
@@ -34,7 +32,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
   templateUrl: './mis-turnos.component.html',
   styleUrl: './mis-turnos.component.css',
   animations: [
-    slideInAnimation
+    slideInAnimation,
   ]
 })
 export class MisTurnosComponent {

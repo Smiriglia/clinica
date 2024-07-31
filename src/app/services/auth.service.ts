@@ -2,10 +2,12 @@ import { Injectable, inject, signal } from '@angular/core';
 
 import { Auth, User, createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword, signOut, updateProfile, user } from '@angular/fire/auth';
 
-import { Observable, from } from 'rxjs';
+import { Observable, from, map } from 'rxjs';
 import { IUser } from '../interfaces/user.interface';
 import { FirestoreService } from './firestore.service';
 import { UserService } from './user.service';
+import { addDoc, collection, collectionData, Firestore, Timestamp } from '@angular/fire/firestore';
+import { Iingreso } from '../interfaces/ingreso.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +16,7 @@ export class AuthService {
   firebaseAuth = inject(Auth);
   firestoreService = inject(FirestoreService);
   userService = inject(UserService);
+  firestore = inject(Firestore);
 
   user$ = user(this.firebaseAuth);
   currentUserSignal = signal<IUser | null | undefined>(undefined);
@@ -28,6 +31,8 @@ export class AuthService {
           this.userService.obtenerInfoUsuario(user.uid)
           .then((finalUser) => {
                 this.currentUserSignal.set(finalUser);
+                if(finalUser)
+                  this.RegisterLogin(finalUser);
           });
         }
         else
@@ -36,6 +41,20 @@ export class AuthService {
         }
       }
     );
+  }
+
+  RegisterLogin(user: IUser) {
+    this.firestoreService.AddData('logins', 
+      {
+        uid: user.uid,
+        email: user.email,
+        dni: user.dni,
+        fecha: new Date(),
+      }
+    )
+    .catch(
+      () => {}
+    )
   }
 
   singIn(email: string, password: string): Observable<void> {
@@ -85,6 +104,22 @@ export class AuthService {
       return true;
 
     return false;
+  }
+
+  getIngresos() : Observable<Iingreso[]> {
+    let col = collection(this.firestore, 'logins');
+    return collectionData(col).pipe(
+      map(
+        (ingresos) => {
+          return ingresos.map((ingreso: any) => {
+            const fechaTimeStamp = ingreso.fecha as Timestamp;
+            ingreso.fecha = fechaTimeStamp.toDate();
+            return ingreso as Iingreso;
+          });
+        }
+
+      )
+    ) as Observable<Iingreso[]>;
   }
 
   sendEmail() {

@@ -10,6 +10,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { RECAPTCHA_SETTINGS, RECAPTCHA_V3_SITE_KEY, RecaptchaSettings, ReCaptchaV3Service } from 'ng-recaptcha';
 import { DateDisplayPipe } from './pipes/date-display.pipe';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { DateTurnPipe } from './pipes/date-turn.pipe';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -28,6 +29,7 @@ export const appConfig: ApplicationConfig = {
     },
     provideAnimations(),
     DateDisplayPipe,
+    DateTurnPipe,
   ]
 
 };

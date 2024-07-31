@@ -7,6 +7,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { VerHistoriaClinicaComponent } from '../ver-historia-clinica/ver-historia-clinica.component';
 import { TableModule } from 'primeng/table';
+import { VerTurnosComponent } from '../ver-turnos/ver-turnos.component';
 
 @Component({
   selector: 'app-pacientes',
@@ -15,6 +16,7 @@ import { TableModule } from 'primeng/table';
     DialogModule,
     ButtonModule,
     VerHistoriaClinicaComponent,
+    VerTurnosComponent,
     TableModule,
 
   ],
@@ -24,10 +26,12 @@ import { TableModule } from 'primeng/table';
 export class PacientesComponent implements OnInit {
   turnoService = inject(TurnoService);
   authService = inject(AuthService);
-  visibleHistoria = false;
+  selectedOption = '';
+  visibleDialog = false;
   pacienteSeleccionado! : IPaciente;
   pacientes : IPaciente[] = [];
   user = this.authService.currentUserSignal()!;
+  isHidden = false;
 
   ngOnInit(): void {
     this.turnoService.getTurnosRoleUid('especialista', this.user.uid)
@@ -44,8 +48,9 @@ export class PacientesComponent implements OnInit {
     )
   }
 
-  verHistoriaClinica(paciente : IPaciente) {
-    this.visibleHistoria = true;
+  verDialog(paciente : IPaciente) {
+    this.selectedOption = `${paciente.nombre} ${paciente.apellido}`;
+    this.visibleDialog = true;
     this.pacienteSeleccionado = paciente;
   }
 
@@ -58,5 +63,11 @@ export class PacientesComponent implements OnInit {
     return false;
   }
 
+  toggleView() {
+    this.isHidden = !this.isHidden
+  }
 
+  changeOption(opcion : string) {
+    this.selectedOption = opcion;
+  }
 }

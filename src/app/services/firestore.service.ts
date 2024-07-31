@@ -11,6 +11,6 @@ export class FirestoreService {
 
   AddData(colection: string, data : any) {
     let col = collection(this.firestore, colection);
-    addDoc(col, data);
+    return addDoc(col, data);
   }
 }

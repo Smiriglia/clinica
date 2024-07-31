@@ -10,6 +10,7 @@ import { DialogModule } from 'primeng/dialog';
 import { VerHistoriaClinicaComponent } from '../ver-historia-clinica/ver-historia-clinica.component';
 import { IPaciente } from '../../interfaces/user.interface';
 import { slideInAnimation } from '../../animations/animations';
+import { BorderColorByRoleDirective } from '../../directives/border-color-by-role.directive';
 
 @Component({
   selector: 'app-mi-perfil',
@@ -21,6 +22,7 @@ import { slideInAnimation } from '../../animations/animations';
     CheckboxModule,
     DialogModule,
     VerHistoriaClinicaComponent,
+    BorderColorByRoleDirective,
   ],
   templateUrl: './mi-perfil.component.html',
   styleUrl: './mi-perfil.component.css',

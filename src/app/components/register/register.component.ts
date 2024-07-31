@@ -38,7 +38,7 @@ export class RegisterComponent {
   authService = inject(AuthService);
   storageService = inject(StorageService);
   
-  role = "paciente";
+  role = "";
   loaderState = {
     loading: false,
     state: "loading"
@@ -53,7 +53,7 @@ export class RegisterComponent {
   onRegister(data: any) {
     this.loaderState.loading = true;
     data.data.role = this.role;
-    if (this.role != "especialista")
+    if (this.role == "especialista")
       data.data.estaHabilitado = false;
     console.log(data);
     this.storageService.uploadMultiple(data.files)
@@ -106,6 +106,10 @@ export class RegisterComponent {
       });
   }
 
+  selectRole(role : string)
+  {
+    this.role = role;
+  }
   executeReCaptcha(token : string | null) {
     this.token = token;
   }

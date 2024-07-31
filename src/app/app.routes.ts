@@ -91,6 +91,13 @@ export const routes: Routes = [
     },
 
     {
+        path: 'estadisticas', loadComponent: () => import('./components/estadisticas/estadisticas.component').then(
+            x => x.EstadisticasComponent
+        ),
+        canActivate: [isAdminGuard],
+    },
+
+    {
         path: '**', loadComponent: () => import('./components/page-not-found/page-not-found.component').then(
             x => x.PageNotFoundComponent
         )

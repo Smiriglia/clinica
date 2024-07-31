@@ -24,6 +24,13 @@
                         </p-floatLabel>
                     </div>
                     <p-button (onClick)="onLogin()" label="Ingresar" icon="pi pi-user" styleClass="w-10rem mx-auto" />
+                    <div class="flex flex-row">
+                        @for (userCredential of userCredentials; track $index) {
+                            <div class="w-2">
+                                <img appBorderColorByRole [role]="userCredential.role" (click)="onLoadCredentials(userCredential)" class="w-full profile-button" [src]="userCredential.picture" alt="profile picture">
+                            </div>
+                        }
+                    </div>
                 </div>
                 <div class="w-full md:w-2">
                     <p-divider layout="vertical" styleClass="hidden md:flex">

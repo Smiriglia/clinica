@@ -6,6 +6,11 @@
     box-shadow: 0 0 20px rgba(0, 255, 200, 0.6);
 }
 
+.especialidad-button {
+    border: solid 2px white;
+    aspect-ratio: 4/4;
+    cursor: pointer;
+}
 /* .button-horario {
     width: 10%;
 } */

@@ -47,8 +47,44 @@
     <div class="flex flex-column justify-content-center align-items-center">
         <div class="py-5">
             <h2>Datos Dinamicos</h2>
+            <div class="py-2">
+                <div class="w-full flex justify-content-center">
+                    <p-floatLabel>
+                        <input [(ngModel)]="datoDinamicoRango.clave" class="w-15rem" type="text" pInputText />
+                        <label for="clave">Clave</label>
+                    </p-floatLabel>
+                </div>
+                <p-slider styleClass="my-2" [(ngModel)]="datoDinamicoRango.valor" class="w-full" />
+            </div>
 
-            <div class="flex flex-column">
+            <div class="py-2">
+                <div class="w-full flex justify-content-center">
+                    <p-floatLabel>
+                        <input [(ngModel)]="datoDinamicoNum.clave" class="w-15rem" type="text" pInputText />
+                        <label for="clave">Clave</label>
+                    </p-floatLabel>
+                </div>
+                <div class="w-full flex justify-content-center">
+                    <p-inputNumber inputStyleClass="w-full text-center" [(ngModel)]="datoDinamicoNum.valor" [showButtons]="true"
+                            buttonLayout="horizontal" spinnerMode="horizontal" inputId="horizontal"
+                            decrementButtonClass="p-button-secondary" incrementButtonClass="p-button-secondary"
+                            incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" [allowEmpty]="false"/>
+                </div>
+            </div>
+
+            <div class="py-2">
+                <div class="w-full flex justify-content-center py-2">
+                    <p-floatLabel>
+                        <input [(ngModel)]="datoDinamicoSwitch.clave" class="w-15rem" type="text" pInputText />
+                        <label for="clave">Clave</label>
+                    </p-floatLabel>
+                </div>
+                <div class="w-full flex justify-content-center">
+                    <p-inputSwitch [(ngModel)]="datoDinamicoSwitch.valor" />
+                </div>
+            </div>
+            <div class="flex flex-column align-content-center justify-content-center">
+
                 @for (data of dynamicData; track $index) {
                     <div class="w-12 flex flex-wrap gap-2 py-2">
                         <div class="w-4">

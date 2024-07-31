@@ -71,8 +71,9 @@
                         </ng-template>
                     </p-table>
                     @if(role.label == 'paciente') {
-                        <div class="flex w-12 py-3 align-items-center justify-content-center">
-                            <p-button (onClick)="exportPacientesToCsv()" icon="pi pi-clock" label="Exportar CSV"></p-button>
+                        <div class="flex w-12 py-3 align-items-center justify-content-center gap-4">
+                            <p-button (onClick)="exportarTurnos()" icon="pi pi-book" label="Exportar Turnos" severity="secondary"></p-button>
+                            <p-button (onClick)="exportPacientesToCsv()" icon="pi pi-file-excel" label="Exportar CSV"></p-button>
                         </div>
                     }
                 </div>
@@ -90,5 +91,24 @@
         [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" >
         @if (visibleHistoria) {
             <app-ver-historia-clinica [paciente]="pacienteSeleccionado"></app-ver-historia-clinica>
+        }
+</p-dialog>
+
+<p-dialog 
+        header="Exportar Turnos" 
+        [modal]="true" 
+        [(visible)]="visibleExportarTurnos" 
+        [style]="{ width: '50rem' }" 
+        [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" >
+        @if (visibleExportarTurnos) {
+            <div class="flex flex-wrap gap-2 align-items-center justify-content-center">
+
+                @for (paciente of users; track $index) {
+                    <div (click)="exportarTurno(paciente)" class="w-3 card cursor-pointer shadow-8 align-items-center justify-content-center">
+                        <img class="w-full profile-picture" [src]="paciente.imagenPerfil" alt="profile picture">
+                        <p class="text-center py-2">{{paciente.nombre}} {{paciente.apellido}}</p>
+                    </div>
+                }
+            </div>
         }
 </p-dialog>

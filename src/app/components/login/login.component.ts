@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { LoaderComponent } from '../loader/loader.component';
 import { scaleUpAnimation } from '../../animations/animations';
+import { BorderColorByRoleDirective } from '../../directives/border-color-by-role.directive';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +21,9 @@ import { scaleUpAnimation } from '../../animations/animations';
     InputTextModule,
     FloatLabelModule,
     PasswordModule,
-    LoaderComponent],
+    LoaderComponent,
+    BorderColorByRoleDirective,
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
   animations: [
@@ -31,6 +34,45 @@ export class LoginComponent {
   errorMessage = ""
   authService = inject(AuthService);
   router = inject(Router);
+  userCredentials : IUserCredentials[] = [
+    {
+      email: 'faustosmiriglia@gmail.com',
+      password: 'test123',
+      picture: 'https://firebasestorage.googleapis.com/v0/b/clinica-90464.appspot.com/o/files%2F19%3A25%3A57%20GMT-0300%20(hora%20est%C3%A1ndar%20de%20Argentina)_foto_fausto.jpg?alt=media&token=9eaf702a-a881-4b31-a69a-b6d999c02da8',
+      role: 'paciente',
+    },
+    {
+      email: 'jorzarurdo@gufum.com',
+      password: 'test123',
+      picture: 'https://firebasestorage.googleapis.com/v0/b/clinica-90464.appspot.com/o/files%2F19%3A31%3A04%20GMT-0300%20(hora%20est%C3%A1ndar%20de%20Argentina)_Willy%20(2).png?alt=media&token=0218f47c-4560-414e-83e9-88a61a8181ac',
+      role: 'paciente',
+    },
+    {
+      email: 'vaspefukni@gufum.com',
+      password: 'test123',
+      picture: 'https://firebasestorage.googleapis.com/v0/b/clinica-90464.appspot.com/o/files%2F19%3A34%3A10%20GMT-0300%20(hora%20est%C3%A1ndar%20de%20Argentina)_hangman.jpg?alt=media&token=a13930ac-6c09-4229-a4fd-229a054b9385',
+      role: 'paciente',
+    },
+    {
+      email: 'dapawood@gmail.com',
+      password: 'test123',
+      picture: 'https://firebasestorage.googleapis.com/v0/b/clinica-90464.appspot.com/o/files%2F20%3A50%3A25%20GMT-0300%20(hora%20est%C3%A1ndar%20de%20Argentina)_5a0c40a65a997e1c2cea116c.png?alt=media&token=e2d2c197-d627-4a51-981a-e18f7c2e0224',
+      role: 'especialista',
+    },
+    {
+      email: 'caloxa4428@digdy.com',
+      password: 'test123',
+      picture: 'https://firebasestorage.googleapis.com/v0/b/clinica-90464.appspot.com/o/files%2F19%3A25%3A46%20GMT-0300%20(hora%20est%C3%A1ndar%20de%20Argentina)_latest.png?alt=media&token=ecf08fcf-e691-486e-9151-9865efa1965b',
+      role: 'especialista',
+    },
+    {
+      email: 'dapawood2@gmail.com',
+      password: 'test123',
+      picture: 'https://firebasestorage.googleapis.com/v0/b/clinica-90464.appspot.com/o/files%2F19%3A12%3A37%20GMT-0300%20(hora%20est%C3%A1ndar%20de%20Argentina)_descarga.jpg?alt=media&token=0f14ae21-f987-4b14-8410-c98cf941f7c3',
+      role: 'admin',
+    },
+    
+  ];
   userData = {
     email: "",
     password: "",
@@ -71,8 +113,20 @@ export class LoginComponent {
       }
     );    
   }
+  
+  onLoadCredentials(userCredential : IUserCredentials) {
+    this.userData.email = userCredential.email;
+    this.userData.password = userCredential.password;
+  }
 
   onRegisterClick() {
     this.router.navigateByUrl('register');
   }
+}
+
+interface IUserCredentials {
+  email: string,
+  password: string,
+  role: string,
+  picture: string,
 }

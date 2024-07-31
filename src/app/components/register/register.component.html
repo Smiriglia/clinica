@@ -9,41 +9,42 @@
                     </div>
                 }
                 @if(token)
-                {                    
-                    <div [class.hidden]="loaderState.loading" class="w-full md:w-5 flex flex-column">
-                        <div class="flex justify-content-center error">
-                            {{errorMessage}}
-                        </div>
-                        <div class="w-full flex flex-row align-items-center justify-content-center my-2 flex-wrap gap-3">
-                            <div class="flex align-items-center">
-                                <p-radioButton 
-                                    name="paciente" 
-                                    value="paciente" 
-                                    [(ngModel)]="role" 
-                                    inputId="paciente" />
-                                <label for="paciente" class="ml-2">
-                                    Paciente
-                                </label>
+                {            
+                    @if (role) {
+                        <div [class.hidden]="loaderState.loading" class="w-full md:w-5 flex flex-column">
+                            <div class="flex justify-content-center error">
+                                {{errorMessage}}
                             </div>
-                            
-                            <div class="flex align-items-center">
-                                <p-radioButton 
-                                    name="especialista" 
-                                    value="especialista" 
-                                    [(ngModel)]="role" 
-                                    inputId="especialista" />
-                                <label for="especialista" class="ml-2">
-                                    Especialista
-                                </label>
+                            @if (role == "paciente") {
+                                <app-form-register-paciente (onRegister)="onRegister($event)"></app-form-register-paciente>
+                            }
+                            @else if (role == "especialista") {
+                                <app-form-register-especialista (onRegister)="onRegister($event)"></app-form-register-especialista>
+                            }
+                        </div>
+                    }
+                    @else {
+                        <div>
+                            <div class="w-full flex justify-content-center">
+                                <h2>Selecciona tu Rol</h2>
+                            </div>  
+                            <div class="flex justify-content-center gap-2">
+                                <div class="w-2">
+                                    <img (click)="selectRole('paciente')" class="w-full role-button" src="assets/register/paciente.jpg" alt="paciente">
+                                    <div class="flex w-full justify-content-center align-content-center">
+                                        <p>Paciente</p>
+                                    </div>
+                                </div>
+        
+                                <div class="w-2">
+                                    <img (click)="selectRole('especialista')" class="w-full role-button" src="assets/register/especialista.jpg" alt="paciente">
+                                    <div class="flex w-full justify-content-center align-content-center">
+                                        <p>Especialista</p>
+                                    </div>  
+                                </div>
                             </div>
                         </div>
-                        @if (role == "paciente") {
-                            <app-form-register-paciente (onRegister)="onRegister($event)"></app-form-register-paciente>
-                        }
-                        @else if (role == "especialista") {
-                            <app-form-register-especialista (onRegister)="onRegister($event)"></app-form-register-especialista>
-                        }
-                    </div>
+                    }    
                 }
                 @else {
                     <div class="py-5 px-5">

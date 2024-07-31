@@ -8,11 +8,13 @@ import { StorageService } from '../../services/storage.service';
 import { FormRegisterAdminComponent } from '../form-register-admin/form-register-admin.component';
 import { TableModule } from 'primeng/table';
 import { IAdmin, IEspecialista, IPaciente, IUser } from '../../interfaces/user.interface';
-import { FirestoreService } from '../../services/firestore.service';
 import { ButtonModule } from 'primeng/button';
 import { UserService } from '../../services/user.service';
 import { DialogModule } from 'primeng/dialog';
 import { VerHistoriaClinicaComponent } from '../ver-historia-clinica/ver-historia-clinica.component';
+import { TurnoService } from '../../services/turno.service';
+import * as XLSX from 'xlsx';
+
 @Component({
   selector: 'app-users',
   standalone: true,
@@ -33,6 +35,7 @@ export class UsersComponent {
   authService = inject(AuthService);
   storageService = inject(StorageService);
   userService = inject(UserService);
+  turnoService = inject(TurnoService);
 
   errorMessage = "";
 
@@ -48,6 +51,8 @@ export class UsersComponent {
 
   visibleHistoria = false;
   pacienteSeleccionado! : IPaciente; 
+
+  visibleExportarTurnos = false;
 
   loaderState = {
     loading: false,
@@ -167,6 +172,34 @@ export class UsersComponent {
   verHistoriaClinica(paciente : IPaciente) {
     this.visibleHistoria = true;
     this.pacienteSeleccionado = paciente;
+  }
+
+  exportarTurnos() {
+    this.visibleExportarTurnos = true;
+  }
+
+  exportarTurno(paciente : IUser) {
+    this.turnoService.getTurnosRoleUid('paciente', paciente.uid)
+    .subscribe(
+      (turnos) => {
+        const exportData = turnos.map(turno => ({
+          id: turno.id,
+          fecha: turno.fecha.toISOString(),
+          pacienteUid: turno.pacienteUid,
+          especialistaUid: turno.especialistaUid,
+          estado: turno.estado,
+          comentario: turno.comentario,
+          review: turno.review
+        }));
+    
+        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(exportData);
+        const wb: XLSX.WorkBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Turnos');
+    
+        XLSX.writeFile(wb, 'turnos.xlsx');
+      }
+    );
+    this.visibleExportarTurnos = false;
   }
 
   exportPacientesToCsv(filename: string = 'pacientes.csv'): void {

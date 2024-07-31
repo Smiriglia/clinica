@@ -1,0 +1,20 @@
+<p-accordion>
+    @if(turnos.length > 0) {
+        @for (turno of turnos; track $index) {
+                <p-accordionTab [header]="turno | turnoHeader">
+                    <div>
+                        <p>Estado: {{turno.estado}}</p>
+                        @if (turno.comentario) {
+                            <p>Comentario: {{turno.comentario}}</p>
+                        }
+                        @if (turno.review) {
+                            <p>Review: {{turno.review}}</p>
+                        }
+                    </div>
+                </p-accordionTab>
+        }
+    }
+    @else {
+        <p>Parece que no tienes historia clinica, espera a que los medicos la rellenen</p>
+    }
+</p-accordion>
