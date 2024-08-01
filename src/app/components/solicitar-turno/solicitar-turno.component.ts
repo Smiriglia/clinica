@@ -13,7 +13,6 @@ import { TurnoService } from '../../services/turno.service';
 import { AuthService } from '../../services/auth.service';
 import { TableModule } from 'primeng/table';
 import { bounceInAnimation, fadeInAnimation, slideInRightAnimation, SlideUpAnimation } from '../../animations/animations';
-import { IHorarios } from '../../interfaces/horarios.interface';
 import { DateTurnPipe } from '../../pipes/date-turn.pipe';
 import { CaptchaDirective } from '../../directives/captcha.directive';
 

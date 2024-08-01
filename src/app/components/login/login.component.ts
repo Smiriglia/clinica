@@ -84,11 +84,12 @@ export class LoginComponent {
 
   onLogin() {
     this.loaderState.loading = true;
+    this.authService.currentUserSignal.set(undefined);
     this.authService.singIn(this.userData.email, this.userData.password).subscribe(
       {
         next: () => {
           this.loaderState.state = "check"
-          this.router.navigateByUrl('/welcome');
+          this.router.navigateByUrl('/home');
         },
         error: (err) => {
           switch(err.code)
@@ -98,6 +99,12 @@ export class LoginComponent {
               break;
             case "auth/operation-not-allowed":
               this.errorMessage = "Operación no permitida"
+              break;
+            case "auth/emailNotVerified":
+              this.errorMessage = "Email no verificado";
+              break;
+            case "auth/noHabilitado":
+              this.errorMessage = "Especialista no habilitado";
               break;
             default:
               this.errorMessage = 'El email o contraseña no son correctos'

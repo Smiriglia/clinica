@@ -1,1 +1,28 @@
-<p>welcome works!</p>
+<div class="welcome-container">
+    <p-card class="welcome-card shadow-8">
+        <div class="header">
+            <h1>Bienvenido a Hospital Clínico</h1>
+        </div>
+        <div class="intro">
+            <p>Nos comprometemos a ofrecer la mejor atención médica con un equipo de profesionales altamente
+                capacitados.</p>
+        </div>
+        <div class="buttons">
+            <button pButton type="button" label="Regístrate" icon="pi pi-user-plus"
+                class="p-button-rounded p-button-primary" routerLink="/register"></button>
+            <button pButton type="button" label="Ingresa" icon="pi pi-sign-in"
+                class="p-button-rounded p-button-success" routerLink="/login"></button>
+        </div>
+    </p-card>
+
+    <div class="carousel-section">
+        <p-carousel [value]="images" [numVisible]="1" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
+            <ng-template pTemplate="item" let-image>
+                <div class="w-12 flex justify-content-center align-content-center">
+                    <img class="carrousel-img" src="assets/welcome/{{image}}.jpg" alt="{{image}}"
+                        style="width: 100%; border-radius: 5px;">
+                </div>
+            </ng-template>
+        </p-carousel>
+    </div>
+</div>

@@ -67,7 +67,7 @@ export class RegisterComponent {
             .subscribe({
               next: (_) => {
                 this.loaderState.state = "check";
-                this.router.navigateByUrl("/welcome");
+                this.router.navigateByUrl('/login');
               },
               error: (err) => {
                 switch (err.code) {

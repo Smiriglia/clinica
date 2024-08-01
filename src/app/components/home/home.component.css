@@ -1,3 +1,57 @@
 * {
     margin: 0;
 }
+
+.home-container {
+    font-family: Arial, sans-serif;
+}
+
+.hero-section {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.hero-section h1 {
+    color: #007bff;
+    margin-bottom: 20px;
+}
+
+.hero-section p {
+    font-size: 18px;
+    margin-bottom: 30px;
+    color: #34495e;
+}
+
+.hero-button {
+    margin: 0 10px;
+}
+
+.services-section,
+.doctors-section,
+.contact-section {
+    text-align: center;
+    padding: 40px 20px;
+    /* background-color: #ffffff; */
+}
+
+.services-section h2,
+.doctors-section h2,
+.contact-section h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+.p-card {
+    margin-bottom: 20px;
+}
+
+.doctor-image {
+    width: 100%;
+    border-radius: 50%;
+}
+
+.footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #007bff;
+}

@@ -3,7 +3,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import { Auth, User, createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword, signOut, updateProfile, user } from '@angular/fire/auth';
 
 import { Observable, from, map } from 'rxjs';
-import { IUser } from '../interfaces/user.interface';
+import { IEspecialista, IUser } from '../interfaces/user.interface';
 import { FirestoreService } from './firestore.service';
 import { UserService } from './user.service';
 import { addDoc, collection, collectionData, Firestore, Timestamp } from '@angular/fire/firestore';
@@ -20,23 +20,39 @@ export class AuthService {
 
   user$ = user(this.firebaseAuth);
   currentUserSignal = signal<IUser | null | undefined>(undefined);
-  userFire : User | null = null;
+  userFire: User | null = null;
 
-  constructor () {
+  constructor() {
     this.user$.subscribe(
       (user) => {
         this.userFire = user;
-        if (user)
-        {
-          this.userService.obtenerInfoUsuario(user.uid)
-          .then((finalUser) => {
-                this.currentUserSignal.set(finalUser);
-                if(finalUser)
-                  this.RegisterLogin(finalUser);
-          });
+        if (user) {
+          if (user.emailVerified) {
+            this.userService.obtenerInfoUsuario(user.uid)
+              .then((finalUser) => {
+                if (finalUser?.role == 'especialista') {
+                  const castedUser = finalUser as IEspecialista;
+                  if (castedUser.estaHabilitado) {
+                    this.currentUserSignal.set(finalUser);
+                    if (finalUser)
+                      this.RegisterLogin(finalUser);
+                  }
+                  else {
+                    this.currentUserSignal.set(null);
+                  }
+                }
+                else {
+                  this.currentUserSignal.set(finalUser);
+                  if (finalUser)
+                    this.RegisterLogin(finalUser);
+                }
+              });
+          }
+          else {
+            this.currentUserSignal.set(null);
+          }
         }
-        else
-        {
+        else {
           this.currentUserSignal.set(null);
         }
       }
@@ -44,7 +60,7 @@ export class AuthService {
   }
 
   RegisterLogin(user: IUser) {
-    this.firestoreService.AddData('logins', 
+    this.firestoreService.AddData('logins',
       {
         uid: user.uid,
         email: user.email,
@@ -52,28 +68,82 @@ export class AuthService {
         fecha: new Date(),
       }
     )
-    .catch(
-      () => {}
-    )
+      .catch(
+        () => { }
+      )
   }
 
   singIn(email: string, password: string): Observable<void> {
-    const promise = signInWithEmailAndPassword(
-      this.firebaseAuth,
-      email,
-      password,
-    ).then(() => { });
-    return from(promise);
+    // return new Observable((subscribe) => {
+    //   signInWithEmailAndPassword(
+    //     this.firebaseAuth,
+    //     email,
+    //     password,
+    //   )
+    //     .then(() => {
+    //       this.isLoggedIn()
+    //         .then(
+    //           (isLogged) => {
+    //             if (isLogged) {
+    //               subscribe.next();
+    //             }
+    //             else {
+    //               const error: any = {};
+    //               if (this.userFire?.emailVerified) {
+    //                 this.sendEmail();
+    //                 error.code = 'auth/emailNotVerified';
+    //               }
+    //               else {
+    //                 error.code = 'auth/noHabilitado';
+    //               }
+    //               subscribe.error(error);
+    //             }
+    //           }
+    //         );
+    //     })
+    //     .catch ((err) => {
+    //       subscribe.error(err);
+    //     }
+    //     );
+    // });
+
+    return new Observable((subscribe) => {
+      signInWithEmailAndPassword(
+        this.firebaseAuth,
+        email,
+        password,
+      )
+        .then(() => {
+          this.isLoggedIn()
+            .then((isLogged) => {
+              if (isLogged) {
+                subscribe.next();
+              } else {
+                const error : any = {};
+                if (!this.userFire?.emailVerified) {
+                  this.sendEmail();
+                  error.code = 'auth/emailNotVerified';
+                } else {
+                  error.code = 'auth/noHabilitado';
+                }
+                subscribe.error(error);
+              }
+            });
+        })
+        .catch((err) => {
+          subscribe.error(err);
+        });
+    });
   }
 
-  singUp(data : any): Observable<void> {
+  singUp(data: any): Observable<void> {
     const promise = createUserWithEmailAndPassword(
       this.firebaseAuth,
       data.email,
       data.password,
     ).then(
       res => {
-        const dataAux = {... data};
+        const dataAux = { ...data };
         delete dataAux.password;
         delete dataAux.rePassword;
         dataAux.uid = res.user.uid;
@@ -88,7 +158,7 @@ export class AuthService {
     return from(promise);
   }
 
-  async isLoggedIn() : Promise<boolean> {
+  async isLoggedIn(): Promise<boolean> {
     const timeLimit = 10000;
     const interval = 100;
     let time = 0;
@@ -99,14 +169,14 @@ export class AuthService {
       user = this.currentUserSignal();
       time += interval;
     }
-  
-    if(user)
+
+    if (user)
       return true;
 
     return false;
   }
 
-  getIngresos() : Observable<Iingreso[]> {
+  getIngresos(): Observable<Iingreso[]> {
     let col = collection(this.firestore, 'logins');
     return collectionData(col).pipe(
       map(
@@ -123,15 +193,14 @@ export class AuthService {
   }
 
   sendEmail() {
-    if(this.userFire)
-    {
+    if (this.userFire) {
       return sendEmailVerification(this.userFire);
     }
     return null;
   }
 
   reload() {
-    if(this.userFire)
+    if (this.userFire)
       return this.userFire.reload();
     return null;
   }
