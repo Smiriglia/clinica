@@ -1,5 +1,10 @@
 <div @slideInRight class="h-full card flex align-items-center justify-content-center">
     <div class="w-8 flex flex-wrap px-5 py-5 gap-2 surface-ground border-round justify-content-center">
+        @if (selectedEspecialista || selectedEspecialidad) {
+            <div class="w-full flex justify-content-start mb-4">
+                <button pButton icon="pi pi-arrow-left" (click)="goBack()" class="p-button-rounded p-button-text p-button-sm" aria-label="Atrás"></button>
+            </div>
+        }
         @if (authService.currentUserSignal()?.role != 'admin' && !isCaptchaValid) {
             <div appCaptcha [isEnabled]="isCaptchaEnabled" (captchaValidated)="onCaptchaValidated($event)"></div>
         }

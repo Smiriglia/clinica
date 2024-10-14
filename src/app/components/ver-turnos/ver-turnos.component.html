@@ -8,7 +8,17 @@
                             <p>Comentario: {{turno.comentario}}</p>
                         }
                         @if (turno.review) {
-                            <p>Review: {{turno.review}}</p>
+
+                            <h3>Encuesta de Atención</h3>
+                            @for (pregunta of turno.review; track $index) {
+                                <div>
+                                    <h4>{{ pregunta.pregunta }}</h4>
+                                    <p>
+                                        <!-- Si la respuesta es booleana, mostrar "Sí" o "No" -->
+                                        {{ pregunta.respuesta === true ? 'Sí' : (pregunta.respuesta === false ? 'No' : pregunta.respuesta) }}
+                                    </p>
+                                </div>
+                            }
                         }
                     </div>
                 </p-accordionTab>

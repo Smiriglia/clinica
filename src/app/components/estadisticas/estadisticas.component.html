@@ -1,7 +1,5 @@
 <div class="w-full flex align-items-center justify-content-center">
-    <div class="w-10 px-5 py-5 border-round-right-lg shadow-7
-    " style="height: 80%;">
-    
+    <div class="w-10 px-5 py-5 border-round-right-lg shadow-7" style="height: 80%;">
         <div class="flex align-items-center justify-content-center my-1 primary-300">
         </div>
         <div class="flex w-12 py-5 flex-row align-items-center justify-content-center">
@@ -18,7 +16,7 @@
             placeholder="Selecciona un dato" />
         </div>
 
-        @if( selectedOption && selectedOption.value > 3) {
+        @if( selectedOption && selectedOption.value > 3 && selectedOption.value < 6) {
             <div class="flex w-12 py-5 flex-row align-items-center justify-content-center">
                 <p-calendar 
                 [(ngModel)]="rangeDates"
@@ -28,19 +26,37 @@
 
             </div>
         }
+        @if (selectedOption && selectedOption.value === 10) {
+
+            <div class="flex w-12 py-1 flex-row align-items-center justify-content-center">
+                <p-dropdown 
+                  [options]="pacientes" 
+                  [(ngModel)]="selectedPaciente" 
+                  optionLabel="nombre"
+                  (onChange)="changeOption()"
+                  placeholder="Selecciona un paciente" >
+                  <ng-template let-paciente pTemplate="patientTemplate">
+                    <div class="flex align-items-center">
+                      <img [src]="paciente.imagenPerfil" alt="Imagen de perfil" width="32" height="32" class="mr-2" />
+                      <span>{{paciente.nombre}} {{paciente.apellido}}</span>
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+          
+            </div>
+        }
         <div class="flex justify-content-center">
-            @if(selectedView == 'grafico') {
-                @if (selectedOption) {
+            @if ((selectedOption && selectedOption.value != 10) || selectedPaciente) {
+                @if(selectedView == 'grafico') {
                     <div class="w-6">
                         <canvas id="chart"> {{ chart }} </canvas>
                         <div class="w-12 flex justify-content-end py-2">
+                            <p-button class="px-3" (onClick)="generateImage()" icon="pi pi-image" severity="primary" label="Exportar Imagen"></p-button>
                             <p-button class="px-3" (onClick)="generatePdf()" icon="pi pi-file-pdf" severity="danger" label="Exportar"></p-button>
                         </div>
                     </div>
                 }
-            }
-            @else {
-                @if (selectedOption) {
+                @else {
                     <div class="w-full">
                         <p-table [tableStyle]="{ 'overflow': 'auto' }" [styleClass]="'small'" [value]="getKeys()" [tableStyle]="{ 'min-width': '50rem' }">
                             <ng-template pTemplate="header">

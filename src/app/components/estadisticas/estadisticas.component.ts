@@ -12,6 +12,8 @@ import { AuthService } from '../../services/auth.service';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import { StatNumberDirective } from '../../directives/stat-number.directive';
+import { UserService } from '../../services/user.service';
+import { IEspecialista, IPaciente, IUser } from '../../interfaces/user.interface';
 
 Chart.register(...registerables);
 
@@ -32,23 +34,32 @@ Chart.register(...registerables);
 export class EstadisticasComponent implements OnInit {
   turnoService = inject(TurnoService);
   authService = inject(AuthService);
-  turnos : ITurno[] = [];
-  ingresos : Iingreso[] = [];
+  userService = inject(UserService);
+  turnos: ITurno[] = [];
+  ingresos: Iingreso[] = [];
   rangeDates: Date[] = [new Date(), new Date()];
+  especialistas: IEspecialista[] = [];
+  pacientes: IPaciente[] = [];
+  selectedPaciente: IPaciente | null = null;
   options = [
-    {name: 'Log de ingresos al sistema', value: 1},
-    {name: 'Cantidad de turnos por especialidad', value: 2},
-    {name: 'Cantidad de turnos por día', value: 3},
-    {name: 'Cantidad de turnos solicitado por médico en un lapso de tiempo', value: 4},
-    {name: 'Cantidad de turnos finalizados por médico en un lapso de tiempo', value: 5},    
+    { name: 'Log de ingresos al sistema', value: 1 },
+    { name: 'Cantidad de turnos por especialidad', value: 2 },
+    { name: 'Cantidad de turnos por día', value: 3 },
+    { name: 'Cantidad de turnos solicitado por médico en un lapso de tiempo', value: 4 },
+    { name: 'Cantidad de turnos finalizados por médico en un lapso de tiempo', value: 5 },
+    { name: 'Cantidad de visitas a la clínica', value: 6 },
+    { name: 'Cantidad de pacientes por especialidad', value: 7 },
+    { name: 'Cantidad de médicos por especialidad', value: 8 },
+    { name: 'Informe basado en la encuesta al cliente', value: 9 },
+    { name: 'Ver turnos por paciente', value: 10 },
   ];
   selectedView = 'estadisticas';
-  chart! : Chart;
-  data : {
+  chart!: Chart;
+  data: {
     [key: string]: any;
   } = {};
   selectedOption: any;
-  config : ChartConfiguration = {
+  config: ChartConfiguration = {
     type: 'bar',
     data: {
       labels: [],
@@ -56,31 +67,42 @@ export class EstadisticasComponent implements OnInit {
         {
           label: 'Turnos',
           backgroundColor: 'blue',
+          borderColor: 'red',
           data: [200, 100, 300, 150, 400, 50],
         }
       ]
     }
   };
 
-  getKeys() : string[] {
+  getKeys(): string[] {
     return Object.keys(this.data);
   }
-  
+
 
   ngOnInit(): void {
     this.turnoService.getAll()
-    .subscribe(
-      (turnos) => {
-        this.turnos = turnos; 
-      }
-    );
+      .subscribe(
+        (turnos) => {
+          this.turnos = turnos;
+        }
+      );
 
     this.authService.getIngresos()
-    .subscribe(
-      (ingresos) => {
-        this.ingresos = ingresos; 
+      .subscribe(
+        (ingresos) => {
+          this.ingresos = ingresos;
+        }
+      );
+    this.userService.getUsersByRole('especialista')
+      .then((users) => {
+        this.especialistas = users as IEspecialista[];
       }
-    );
+      );
+    this.userService.getUsersByRole('paciente')
+      .then((users) => {
+        this.pacientes = users as IPaciente[];
+      }
+      );
   }
 
 
@@ -91,13 +113,13 @@ export class EstadisticasComponent implements OnInit {
 
   verGrafico() {
     this.selectedView = 'grafico';
-      this.loadGrafico();
+    this.loadGrafico();
   }
 
   loadGrafico() {
     setTimeout(
       () => {
-          this.chart = new Chart('chart', this.config)
+        this.chart = new Chart('chart', this.config)
       },
       150
     );
@@ -121,99 +143,212 @@ export class EstadisticasComponent implements OnInit {
       case 5:
         this.calcularRealizadosMedico();
         break;
-
+      case 6:
+        this.calcularCantVisitas();
+        break;
+      case 7:
+        this.calcularCantPacientesEsp();
+        break;
+      case 8:
+        this.calcularCantMedicosEsp();
+        break;
+      case 9:
+        this.calcularPromedioEstrellasPorEspecialidad();
+        break;
+      case 10:
+        this.calcularCantTurnosPaciente();
+        break;
     }
   }
+
   // {name: 'Cantidad de turnos por especialidad', value: 2}
   calcularCantTurnosEsp() {
-   this.data = {};
+    this.data = {};
 
-    for (let turno of this.turnos){
-      if(this.data[turno.especialidad])
+    for (let turno of this.turnos) {
+      if (this.data[turno.especialidad])
         this.data[turno.especialidad] += 1;
-      else 
-      this.data[turno.especialidad] = 1;
+      else
+        this.data[turno.especialidad] = 1;
     }
     this.updateChart('line', 'Turnos');
   }
 
   calcularSolicitadosMedico() {
     this.data = {};
- 
-     for (let turno of this.turnos){
-      if(turno.fecha >= this.rangeDates[0] && turno.fecha >= this.rangeDates[0])
-      {
+
+    for (let turno of this.turnos) {
+      if (turno.fecha >= this.rangeDates[0] && turno.fecha <= this.rangeDates[1]) {
         const nombreCompleto = `${turno.especialista.nombre} ${turno.especialista.apellido}`;
-        if(this.data[nombreCompleto])
+        if (this.data[nombreCompleto])
           this.data[nombreCompleto] += 1;
-        else 
+        else
           this.data[nombreCompleto] = 1;
       }
-     }
-     this.updateChart('bar', 'Turnos');
-   }
+    }
+    this.updateChart('bar', 'Turnos');
+  }
 
-   calcularRealizadosMedico() {
+  calcularRealizadosMedico() {
     this.data = {};
- 
-     for (let turno of this.turnos){
-      if(turno.fecha >= this.rangeDates[0] && turno.fecha >= this.rangeDates[0] && turno.estado == 'realizado')
-      {
+
+    for (let turno of this.turnos) {
+      if (turno.fecha >= this.rangeDates[0] && turno.fecha <= this.rangeDates[1] && turno.estado == 'realizado') {
         const nombreCompleto = `${turno.especialista.nombre} ${turno.especialista.apellido}`;
-        if(this.data[nombreCompleto])
+        if (this.data[nombreCompleto])
           this.data[nombreCompleto] += 1;
-        else 
+        else
           this.data[nombreCompleto] = 1;
       }
-     }
-     this.updateChart('', 'Turnos');
-   }
+    }
+    this.updateChart('', 'Turnos');
+  }
 
-   calcularCantTurnosDia() {
+  calcularCantTurnosDia() {
     this.data = {};
- 
-     for (let turno of this.turnos){
-      let dateStr : string = `${turno.fecha.getDate()}/${turno.fecha.getMonth()}/${turno.fecha.getFullYear()}`
-      if(this.data[dateStr])
-        this.data[dateStr] += 1
-      else 
-        this.data[dateStr] = 1
-     }
-     this.updateChart('bar', 'Turnos');
-   }
 
-   
-   calcularCantIngresosDia() {
+    for (let turno of this.turnos) {
+      let dateStr: string = `${turno.fecha.getDate()}/${turno.fecha.getMonth()}/${turno.fecha.getFullYear()}`
+      if (this.data[dateStr])
+        this.data[dateStr] += 1
+      else
+        this.data[dateStr] = 1
+    }
+    this.updateChart('bar', 'Turnos');
+  }
+
+
+  calcularCantIngresosDia() {
     this.data = {};
- 
-     for (let ingreso of this.ingresos){
-      let dateStr : string = `${ingreso.fecha.getDate()}/${ingreso.fecha.getMonth()}/${ingreso.fecha.getFullYear()}`
-      if(this.data[dateStr])
+
+    for (let ingreso of this.ingresos) {
+      let dateStr: string = `${ingreso.fecha.getDate()}/${ingreso.fecha.getMonth()}/${ingreso.fecha.getFullYear()}`
+      if (this.data[dateStr])
         this.data[dateStr] += 1
-      else 
+      else
         this.data[dateStr] = 1
-     }
-     this.updateChart('bar', 'Ingresos');
-   }
+    }
+    this.updateChart('bar', 'Ingresos');
+  }
+
+  calcularCantVisitas() {
+    this.data = {};
+
+    for (let turno of this.turnos) {
+      if (turno.estado === 'realizado') {
+        let dateStr: string = `${turno.fecha.getDate()}/${turno.fecha.getMonth() + 1}/${turno.fecha.getFullYear()}`;
+        if (this.data[dateStr]) {
+          this.data[dateStr] += 1;
+        } else {
+          this.data[dateStr] = 1;
+        }
+      }
+    }
+
+    this.updateChart('bar', 'Visitas a la Clínica');
+  }
+
+  calcularCantPacientesEsp() {
+    this.data = {};
+
+    for (let turno of this.turnos) {
+      if (this.data[turno.especialidad]) {
+        this.data[turno.especialidad].add(turno.paciente.uid);
+      } else {
+        this.data[turno.especialidad] = new Set([turno.paciente.uid]);
+      }
+    }
+
+    for (let especialidad in this.data) {
+      this.data[especialidad] = this.data[especialidad].size;
+    }
+
+    this.updateChart('bar', 'Pacientes por Especialidad');
+  }
+
+  calcularCantMedicosEsp() {
+    this.data = {};
+
+    for (let especialista of this.especialistas) {
+      if (especialista.estaHabilitado) {
+        for (let especialidad of especialista.especialidades) {
+          if (this.data[especialidad]) {
+            this.data[especialidad] += 1;
+          } else {
+            this.data[especialidad] = 1;
+          }
+        }
+      }
+    }
+
+    this.updateChart('bar', 'Médicos por Especialidad');
+  }
+
+  calcularCantTurnosPaciente() {
+    this.data = {};
+
+    for (let turno of this.turnos) {
+      if (turno.pacienteUid == this.selectedPaciente?.uid) {
+        if (this.data[turno.estado]) {
+          this.data[turno.estado] += 1;
+        }
+        else {
+          this.data[turno.estado] = 1;
+        }
+      }
+    }
+
+    this.updateChart('bar', 'Estado Turnos Paciente');
+  }
+
+  calcularPromedioEstrellasPorEspecialidad() {
+    this.data = {};
+
+    for (let turno of this.turnos) {
+      if (turno.review) {
+        for (let pregunta of turno.review) {
+          if (pregunta.pregunta.toLowerCase().includes('estrellas') && typeof pregunta.respuesta === 'number') {
+            if (this.data[turno.especialidad]) {
+              this.data[turno.especialidad] += pregunta.respuesta;
+            }
+            else {
+              this.data[turno.especialidad] = pregunta.respuesta;
+            }
+          }
+        }
+      }
+    }
+
+    for (let especialidad in Object.keys(this.data)) {
+      if (this.data[especialidad] > 0) {
+        this.data[especialidad] = this.data[especialidad] / this.data[especialidad];
+      }
+    }
+
+    this.updateChart('bar', 'Promedio de Estrellas por Especialidad');
+  }
 
 
-  updateChart(type: string, dataLabel : string) {
+
+
+
+  updateChart(type: string, dataLabel: string) {
     const keys = this.getKeys();
-    let newLabels : string[] = [];
-    let newData : number[] = [];
-    for(let key of keys) {
+    let newLabels: string[] = [];
+    let newData: number[] = [];
+    for (let key of keys) {
       newLabels.push(key);
       newData.push(this.data[key]);
     }
     this.config.data.labels = newLabels;
     this.config.data.datasets[0].data = newData;
     this.config.data.datasets[0].label = dataLabel;
-    if(type == 'line')
+    if (type == 'line')
       this.config.type = 'line';
     else
       this.config.type = 'bar';
 
-    if(this.selectedView == 'grafico') {
+    if (this.selectedView == 'grafico') {
       this.selectedView = 'estadisticas';
       setTimeout(
         () => {
@@ -224,21 +359,31 @@ export class EstadisticasComponent implements OnInit {
       )
     }
 
-  
+
   }
   generateExcel() {
     const headers = ['Campo', 'Cantidad'];
     const rows = Object.entries(this.data);
     const worksheetData = [headers, ...rows];
-    
+
     const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(worksheetData);
-    
+
     const workbook: XLSX.WorkBook = {
       Sheets: { 'Data': worksheet },
       SheetNames: ['Data']
     };
-    
+
     XLSX.writeFile(workbook, 'estadisticas.xlsx');
+  }
+  generateImage() {
+    if (this.chart) {
+      const base64Img = this.chart.toBase64Image('image/png', 1.0);
+      
+      const link = document.createElement('a');
+      link.href = base64Img;
+      link.download = `${this.selectedOption.name}.png`;
+      link.click();
+    }
   }
 
   generatePdf() {

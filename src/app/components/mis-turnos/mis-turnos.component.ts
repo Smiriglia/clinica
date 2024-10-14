@@ -14,6 +14,11 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { FormHistoriaClinicaComponent } from '../form-historia-clinica/form-historia-clinica.component';
 import { IHistoriaClinica } from '../../interfaces/historia_clinica.interface';
 import { slideInAnimation } from '../../animations/animations';
+import { SliderModule } from 'primeng/slider';
+import { CheckboxModule } from 'primeng/checkbox';
+import { RatingModule } from 'primeng/rating';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 @Component({
   selector: 'app-mis-turnos',
@@ -27,7 +32,13 @@ import { slideInAnimation } from '../../animations/animations';
     InputTextModule,
     ToolbarModule,
     InputGroupModule,
+    SliderModule,
+    CheckboxModule,
     FormHistoriaClinicaComponent,
+    InputTextModule,
+    InputTextareaModule,
+    RatingModule,
+    RadioButtonModule
   ],
   templateUrl: './mis-turnos.component.html',
   styleUrl: './mis-turnos.component.css',
@@ -43,7 +54,6 @@ export class MisTurnosComponent {
   turnos: ITurno[] = []
   visibleComentario = false;
   visibleReview = false;
-  visibleDejarReview = false;
   visibleEncuesta = false;
   visibleHistoria = false;
   motivoComentario = '';
@@ -52,7 +62,6 @@ export class MisTurnosComponent {
   turnoAModificar: ITurno | null = null;
   query = '';
   filterBy = 'especialidad';
-  datosDinamicos = false;
   campoAdicional = '';
 
   historiaFijaFilters = ['altura', 'temperatura', 'peso', 'presion'];
@@ -75,6 +84,31 @@ export class MisTurnosComponent {
 
   ];
 
+  encuestaAtencion: IPregunta[] = [
+    {
+      pregunta: 'Por favor, deja un comentario adicional:',
+      respuesta: ''
+    },
+    {
+      pregunta: '¿Cómo calificarías el servicio con estrellas?',
+      respuesta: 0
+    },
+    {
+      pregunta: '¿Recomendarías este servicio?',
+      respuesta: ''
+    },
+    {
+      pregunta: '¿Qué aspectos te gustaron del servicio? (Marque todos los que aplican)',
+      respuesta: []
+    },
+    {
+      pregunta: 'Nivel de satisfacción general (1-10):',
+      respuesta: 5
+    }
+  ];
+
+  visibleEncuestaAtencion = false;
+
 
   constructor() {
     const user = this.authService.currentUserSignal()!
@@ -96,14 +130,13 @@ export class MisTurnosComponent {
     this.filterBy = newFilter;
   }
 
-  changeFilterCampoInterno(newFilter: string, campoAdicional : string, datosDinamicos : boolean) {
+  changeFilterCampoInterno(newFilter: string, campoAdicional: string) {
     this.filterBy = newFilter;
-    this.datosDinamicos = datosDinamicos;
     this.campoAdicional = campoAdicional;
   }
 
   getFilteredTurnos(): ITurno[] {
-    if(this.query.length == 0) return this.turnos;
+    if (this.query.length == 0) return this.turnos;
 
     if (this.filterBy == 'paciente' || this.filterBy == 'especialista') {
       return this.turnos.filter((turno) => {
@@ -112,27 +145,25 @@ export class MisTurnosComponent {
         return nombreCompleto.includes(this.query.toLowerCase())
       });
     }
-    if(this.filterBy == 'historiaClinica') {
+    if (this.filterBy == 'historiaClinica') {
       return this.turnos.filter((turno) => {
-        if(!turno.historiaClinica) return false;
+        if (!turno.historiaClinica) return false;
 
-        if(this.datosDinamicos) {
-          for(let datoDinamico of turno.historiaClinica.datosDinamicos)
-          {
-            if (datoDinamico.clave == this.campoAdicional)
-            {
-              let valor: string = `${datoDinamico.valor}`;
-              valor = valor.toLowerCase();
-              return valor.includes(this.query.toLowerCase());
-            }
+
+        for (let datoDinamico of turno.historiaClinica.datosDinamicos) {
+          if (datoDinamico.clave == this.campoAdicional) {
+            let valor: string = `${datoDinamico.valor}`;
+            valor = valor.toLowerCase();
+            return valor.includes(this.query.toLowerCase());
           }
-          return false;
         }
-        else {
+
+        if (turno.historiaClinica[this.campoAdicional]) {
           let valor: string = `${turno.historiaClinica[this.campoAdicional]}`;
           valor = valor.toLowerCase();
           return valor.includes(this.query.toLowerCase());
         }
+        return false;
       });
     }
     else if (this.filterBy == 'fecha') {
@@ -144,14 +175,13 @@ export class MisTurnosComponent {
     return this.turnos.filter((turno) => turno[this.filterBy].toLowerCase().includes(this.query.toLowerCase()));
   }
 
-  getHistoriaDinamicoFilters() : string[] {
-    const filters : string[] = [];
+  getHistoriaDinamicoFilters(): string[] {
+    const filters: string[] = [];
 
-    for(let turno of this.turnos) {
-      if(turno.historiaClinica)
-      {
-        for(let datoDinamico of turno.historiaClinica.datosDinamicos){
-          if(!filters.includes(datoDinamico.clave)) {
+    for (let turno of this.turnos) {
+      if (turno.historiaClinica) {
+        for (let datoDinamico of turno.historiaClinica.datosDinamicos) {
+          if (!filters.includes(datoDinamico.clave)) {
             filters.push(datoDinamico.clave);
           }
         }
@@ -290,7 +320,7 @@ export class MisTurnosComponent {
 
   dejarReview(turno: ITurno) {
     this.turnoAModificar = turno;
-    this.visibleDejarReview = true;
+    this.visibleEncuestaAtencion = true;
   }
 
   mostrarEncuesta(turno: ITurno) {
@@ -339,7 +369,7 @@ export class MisTurnosComponent {
           console.log(err);
         }
       );
-    this.visibleDejarReview = false;
+    this.visibleEncuestaAtencion = false;
     this.nuevoComentario = '';
   }
 
@@ -378,7 +408,7 @@ export class MisTurnosComponent {
         (err) => {
           console.log(err);
         }
-    );
+      );
     this.visibleEncuesta = false;
     this.clearEncuesta();
   }
@@ -400,15 +430,56 @@ export class MisTurnosComponent {
         (err) => {
           console.log(err);
         }
-    );
+      );
     this.visibleHistoria = false;
   }
 
-  getSearchingString() : string {
+  getSearchingString(): string {
     let str = 'Buscando por ' + this.filterBy;
-    if(this.filterBy == 'historiaClinica') {
+    if (this.filterBy == 'historiaClinica') {
       str += ': ' + this.campoAdicional;
     }
     return str;
+  }
+
+  puedeEnviarEncuestaAtencion() {
+    return this.encuestaAtencion.some((pregunta, index) => {
+      if (index === 0 || index === 2) { // Pregunta de comentario adicional y recomendación
+        return !pregunta.respuesta || pregunta.respuesta.trim().length === 0;
+      } else if (index === 1) { // Pregunta de calificación con estrellas
+        return pregunta.respuesta === 0;
+      } else if (index === 4) { // Pregunta de nivel de satisfacción (rango)
+        return pregunta.respuesta < 1 || pregunta.respuesta > 10;
+      }
+      return false;
+    });
+  }
+
+  enviarEncuestaAtencion() {
+    this.turnoService.update(
+      this.turnoAModificar!,
+      {
+        review: this.encuestaAtencion
+      }
+    )
+      .then(() => {
+        // Manejar éxito
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    this.visibleEncuestaAtencion = false;
+
+    // Limpiar los campos después de enviar
+    this.encuestaAtencion.forEach((pregunta, index) => {
+      if (index === 0 || index === 2) { // Pregunta de comentario adicional y recomendación
+        pregunta.respuesta = '';
+      } else if (index === 1 || index === 4) { // Pregunta de estrellas y nivel de satisfacción
+        pregunta.respuesta = 0;
+      } else if (index === 3) { // Pregunta de checkbox
+        pregunta.respuesta = [];
+      }
+    });
   }
 }

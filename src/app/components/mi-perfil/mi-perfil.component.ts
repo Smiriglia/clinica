@@ -11,6 +11,7 @@ import { VerHistoriaClinicaComponent } from '../ver-historia-clinica/ver-histori
 import { IPaciente } from '../../interfaces/user.interface';
 import { slideInAnimation } from '../../animations/animations';
 import { BorderColorByRoleDirective } from '../../directives/border-color-by-role.directive';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-mi-perfil',
@@ -23,6 +24,7 @@ import { BorderColorByRoleDirective } from '../../directives/border-color-by-rol
     DialogModule,
     VerHistoriaClinicaComponent,
     BorderColorByRoleDirective,
+    TranslateModule,
   ],
   templateUrl: './mi-perfil.component.html',
   styleUrl: './mi-perfil.component.css',

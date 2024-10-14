@@ -15,6 +15,7 @@ import { TableModule } from 'primeng/table';
 import { bounceInAnimation, fadeInAnimation, slideInRightAnimation, SlideUpAnimation } from '../../animations/animations';
 import { DateTurnPipe } from '../../pipes/date-turn.pipe';
 import { CaptchaDirective } from '../../directives/captcha.directive';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -45,6 +46,7 @@ export class SolicitarTurnoComponent implements OnInit {
   turnoService = inject(TurnoService);
   authService = inject(AuthService);
   dateTurnPipe = inject(DateTurnPipe);
+  router = inject(Router);
   especialistas: IEspecialista[] = [];
   turnos: ITurno[] = [];
   selectedEspecialista: IEspecialista | null = null;
@@ -233,12 +235,13 @@ export class SolicitarTurnoComponent implements OnInit {
       especialista: this.selectedEspecialista!,
       paciente: this.selectedPaciente! as IPaciente,
     })
-      .then((val) => {
-        console.log(val);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    .then((val) => {
+      console.log(val);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+    this.router.navigateByUrl('/home');
   }
 
   getImgEspecialidad(especialidad : string) {
@@ -254,5 +257,15 @@ export class SolicitarTurnoComponent implements OnInit {
 
   onCaptchaValidated(isValid : boolean) {
     this.isCaptchaValid = isValid;
+  }
+
+  goBack() {
+    if (this.selectedEspecialidad) {
+      this.selectedEspecialidad = undefined;
+    }
+    else if (this.selectedEspecialista)
+    {
+      this.selectedEspecialista = null;
+    }
   }
 }

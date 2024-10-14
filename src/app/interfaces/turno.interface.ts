@@ -10,7 +10,7 @@ export interface ITurno {
     especialistaUid: string,
     estado: string,
     comentario: string | null,
-    review: string | null,
+    review: IPregunta[] | null,
     especialista : IEspecialista,
     especialidad : string,
     paciente : IPaciente,

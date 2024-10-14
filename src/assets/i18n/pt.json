@@ -1,0 +1,53 @@
+{
+  "HOME": {
+    "TITLE": "Bem-vindo ao Hospital Clínico",
+    "DESCRIPTION": "Estamos comprometidos em fornecer os melhores cuidados médicos com uma equipe de profissionais altamente treinados.",
+    "SERVICES_TITLE": "Nossos Serviços",
+    "CARDIOLOGY": {
+      "HEADER": "Cardiologia",
+      "SUBHEADER": "Cuidados especializados",
+      "DESCRIPTION": "Oferecemos os melhores serviços de cardiologia para cuidar do seu coração."
+    },
+    "PEDIATRICS": {
+      "HEADER": "Pediatria",
+      "SUBHEADER": "Cuidado infantil",
+      "DESCRIPTION": "Cuidados pediátricos abrangentes para o bem-estar dos seus filhos."
+    },
+    "PHYSIOTHERAPY": {
+      "HEADER": "Fisioterapia",
+      "SUBHEADER": "Tratamentos avançados",
+      "DESCRIPTION": "Soluções eficazes para problemas traumáticos."
+    }
+  },
+  "PROFILE": {
+    "SCHEDULES": "Horários",
+    "BACK": "Voltar",
+    "CLEAR": "Limpar",
+    "SAVE": "Salvar",
+    "ROLE": "Função",
+    "AGE": "Idade",
+    "EMAIL": "Email",
+    "DNI": "DNI",
+    "HEALTH_INSURANCE": "Plano de Saúde",
+    "MY_MEDICAL_HISTORY": "Meu Histórico Clínico",
+    "SPECIALTIES": "Especialidades",
+    "MY_SCHEDULES": "Meus Horários",
+    "PROFILE_IMAGE_ALT": "imagem de perfil",
+    "SEE_MEDICAL_HISTORY": "Ver Histórico Clínico"
+  },
+  "DAYS_OF_WEEK": {
+    "lunes": "Segunda-feira",
+    "martes": "Terça-feira",
+    "miercoles": "Quarta-feira",
+    "jueves": "Quinta-feira",
+    "viernes": "Sexta-feira",
+    "sabado": "Sábado",
+    "domingo": "Domingo"
+  },
+  "WELCOME": {
+    "TITLE": "Bem-vindo ao Hospital Clínico",
+    "INTRO": "Estamos comprometidos em fornecer o melhor atendimento médico com uma equipe de profissionais altamente qualificados.",
+    "REGISTER": "Registrar-se",
+    "LOGIN": "Entrar"
+  }
+}

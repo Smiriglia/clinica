@@ -1,27 +1,26 @@
 <div class="home-container">
 
     <div class="hero-section">
-        <h1>Bienvenido a Hospital Clínico</h1>
-        <p>Nos comprometemos a ofrecer la mejor atención médica con un equipo de profesionales altamente capacitados.
-        </p>
+        <h1>{{ 'HOME.TITLE' | translate }}</h1>
+        <p>{{ 'HOME.DESCRIPTION' | translate }}</p>
     </div>
 
     <div class="services-section">
-        <h2>Nuestros Servicios</h2>
+        <h2>{{ 'HOME.SERVICES_TITLE' | translate }}</h2>
         <div class="p-grid">
             <div class="p-col-12 p-md-4">
-                <p-card header="Cardiología" subheader="Atención especializada">
-                    <p>Ofrecemos los mejores servicios en cardiología para cuidar tu corazón.</p>
+                <p-card [header]="'HOME.CARDIOLOGY.HEADER' | translate" [subheader]="'HOME.CARDIOLOGY.SUBHEADER' | translate">
+                    <p>{{ 'HOME.CARDIOLOGY.DESCRIPTION' | translate }}</p>
                 </p-card>
             </div>
             <div class="p-col-12 p-md-4">
-                <p-card header="Pediatría" subheader="Cuidado infantil">
-                    <p>Atención pediátrica integral para el bienestar de tus hijos.</p>
+                <p-card [header]="'HOME.PEDIATRICS.HEADER' | translate" [subheader]="'HOME.PEDIATRICS.SUBHEADER' | translate">
+                    <p>{{ 'HOME.PEDIATRICS.DESCRIPTION' | translate }}</p>
                 </p-card>
             </div>
             <div class="p-col-12 p-md-4">
-                <p-card header="Fisioterapia" subheader="Tratamientos avanzados">
-                    <p>Soluciones efectivas para problemas traumatológicos.</p>
+                <p-card [header]="'HOME.PHYSIOTHERAPY.HEADER' | translate" [subheader]="'HOME.PHYSIOTHERAPY.SUBHEADER' | translate">
+                    <p>{{ 'HOME.PHYSIOTHERAPY.DESCRIPTION' | translate }}</p>
                 </p-card>
             </div>
         </div>

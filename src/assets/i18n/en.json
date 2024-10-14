@@ -1,0 +1,53 @@
+{
+  "HOME": {
+    "TITLE": "Welcome to Clinical Hospital",
+    "DESCRIPTION": "We are committed to providing the best medical care with a team of highly trained professionals.",
+    "SERVICES_TITLE": "Our Services",
+    "CARDIOLOGY": {
+      "HEADER": "Cardiology",
+      "SUBHEADER": "Specialized care",
+      "DESCRIPTION": "We offer the best cardiology services to take care of your heart."
+    },
+    "PEDIATRICS": {
+      "HEADER": "Pediatrics",
+      "SUBHEADER": "Child care",
+      "DESCRIPTION": "Comprehensive pediatric care for the well-being of your children."
+    },
+    "PHYSIOTHERAPY": {
+      "HEADER": "Physiotherapy",
+      "SUBHEADER": "Advanced treatments",
+      "DESCRIPTION": "Effective solutions for traumatic issues."
+    }
+  },
+  "PROFILE": {
+    "SCHEDULES": "Schedules",
+    "BACK": "Back",
+    "CLEAR": "Clear",
+    "SAVE": "Save",
+    "ROLE": "Role",
+    "AGE": "Age",
+    "EMAIL": "Email",
+    "DNI": "DNI",
+    "HEALTH_INSURANCE": "Health Insurance",
+    "MY_MEDICAL_HISTORY": "My Medical History",
+    "SPECIALTIES": "Specialties",
+    "MY_SCHEDULES": "My Schedules",
+    "PROFILE_IMAGE_ALT": "profile image",
+    "SEE_MEDICAL_HISTORY": "See Medical History"
+  },
+  "DAYS_OF_WEEK": {
+    "lunes": "Monday",
+    "martes": "Tuesday",
+    "miercoles": "Wednesday",
+    "jueves": "Thursday",
+    "viernes": "Friday",
+    "sabado": "Saturday",
+    "domingo": "Sunday"
+  },
+  "WELCOME": {
+    "TITLE": "Welcome to Clinical Hospital",
+    "INTRO": "We are committed to providing the best medical care with a team of highly trained professionals.",
+    "REGISTER": "Register",
+    "LOGIN": "Login"
+  }
+}

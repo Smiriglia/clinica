@@ -1,0 +1,15 @@
+<div class="language-switcher" [class.open]="isOpen">
+    <button class="language-button" (click)="toggleMenu()">
+        <span [class]="'fi fi-' + currentFlag"></span>
+    </button>
+    <div class="language-menu" [@menuAnimation]="isOpen ? 'open' : 'closed'">
+        @if (isOpen)
+        {
+            @for (lang of languages; track $index) {
+                <button (click)="changeLanguage(lang)" class="language-option">
+                    <span [class]="'fi fi-' + lang.flag"></span>
+                </button>
+            }
+        }
+    </div>
+</div>

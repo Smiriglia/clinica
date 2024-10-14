@@ -28,21 +28,20 @@
                     <p-button (onClick)="changeFilter('estado')" label="Estado" [text]="true" [raised]="true"
                         severity="success" />
                 </div>
-                @for (filter of historiaFijaFilters; track $index) {
-                    <div class="w-2">
-                        <p-button (onClick)="changeFilterCampoInterno('historiaClinica', filter, false)" [label]="filter" [text]="true" [raised]="true"
-                            severity="help" />
-                    </div>
-                }
-
-                @for (filter of getHistoriaDinamicoFilters(); track $index) {
-                    <div class="w-2">
-                        <p-button (onClick)="changeFilterCampoInterno('historiaClinica', filter, true)" [label]="filter" [text]="true" [raised]="true"
-                            severity="help" />
-                    </div>
-                }
+                <div class="w-2">
+                    <p-button (onClick)="changeFilter('historiaClinica')" label="Historia Clinica" [text]="true" [raised]="true"
+                        severity="help" />
+                </div>
 
             </div>
+            @if (filterBy == 'historiaClinica') {
+                <div class="w-12">
+                    <p-inputGroup>
+                        <input [(ngModel)]="campoAdicional" type="text" pInputText placeholder="clave" />
+                        <button disabled type="button" pButton icon="pi pi-search"></button>
+                    </p-inputGroup>
+                </div>
+            }
             <div class="w-12">
                 <p-inputGroup>
                     <input [(ngModel)]="query" type="text" pInputText [placeholder]="getSearchingString()" />
@@ -109,18 +108,6 @@
 </p-dialog>
 
 <p-dialog 
-        header="Deja una reseña" 
-        [modal]="true" 
-        [(visible)]="visibleDejarReview" 
-        [style]="{ width: '50rem' }" 
-        [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" >
-        <div class="flex flex-column align-items-center gap-5">
-            <input placeholder="Reseña" type="text" pInputText [(ngModel)]="nuevoComentario"  class="w-full"/>
-            <p-button [disabled]="puedeConfirmar()" (onClick)="confirmarReview()" label="Confirmar" />
-        </div>
-</p-dialog>
-
-<p-dialog 
         header="Reseña"
         [modal]="true" 
         [(visible)]="visibleReview" 
@@ -135,15 +122,18 @@
                     </p>
                 </div>
             }
+            <hr>
             @if (turnoAModificar?.review) {
-                <div>
+                <h3>Encuesta de Atención</h3>
+                @for (pregunta of turnoAModificar!.review; track $index) {
                     <div>
-                        <h3>Reseña</h3>
+                        <h4>{{ pregunta.pregunta }}</h4>
                         <p>
-                            {{ turnoAModificar?.review }}
+                            <!-- Si la respuesta es booleana, mostrar "Sí" o "No" -->
+                            {{ pregunta.respuesta === true ? 'Sí' : (pregunta.respuesta === false ? 'No' : pregunta.respuesta) }}
                         </p>
                     </div>
-                </div>
+                }
             }
 
         </div>
@@ -178,4 +168,58 @@
         @if (visibleHistoria) {
             <app-form-historia-clinica (onSubmit)="enviarHistoriaClinica($event)"></app-form-historia-clinica>
         }
+</p-dialog>
+
+<p-dialog 
+    header="Atención - Completa la encuesta" 
+    [modal]="true" 
+    [(visible)]="visibleEncuestaAtencion" 
+    [style]="{ width: '50rem' }" 
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" >
+    
+    <div class="flex flex-column align-items-center gap-5">
+        <div class="w-full">
+            @for (pregunta of encuestaAtencion; track $index) {
+                
+                <h4 class="py-2">{{ pregunta.pregunta }}</h4>
+    
+                @if ($index === 0) {
+    
+                    <textarea placeholder="Escribe tu respuesta..." pInputTextarea [(ngModel)]="pregunta.respuesta" class="w-full"></textarea>
+                }
+                @else if ($index === 1) {
+                    <p-rating [(ngModel)]="pregunta.respuesta" stars="5" cancel="false"></p-rating>
+                }
+                @else if ($index === 2) {
+                    <div>
+                        <div class="field-radiobutton">
+                            <p-radioButton name="recomendar{{$index}}" value="Sí" [(ngModel)]="pregunta.respuesta" label="Sí"></p-radioButton>
+                        </div>
+                        <div class="field-radiobutton">
+                            <p-radioButton name="recomendar{{$index}}" value="No" [(ngModel)]="pregunta.respuesta" label="No"></p-radioButton>
+                        </div>
+                    </div>
+                }
+                @else if ($index === 3) {
+                    <div>
+                        @for (opcion of ['Rapidez', 'Atención', 'Calidad']; track $index) {
+                            <div class="field-checkbox">
+                                <p-checkbox name="aspectos{{$index}}" [value]="opcion" [(ngModel)]="pregunta.respuesta" label="{{ opcion }}"></p-checkbox>
+                            </div>
+                        }
+                    </div>
+                }
+                @else if ($index === 4) {
+    
+                    <div>
+                        <p-slider [(ngModel)]="pregunta.respuesta" [min]="1" [max]="10"></p-slider>
+                        <p>Nivel: {{pregunta.respuesta}}</p>
+                    </div>
+                }
+            }
+        </div>
+
+        <!-- Botón de Confirmar -->
+        <p-button [disabled]="puedeEnviarEncuestaAtencion()" (onClick)="enviarEncuestaAtencion()" label="Confirmar" />
+    </div>
 </p-dialog>

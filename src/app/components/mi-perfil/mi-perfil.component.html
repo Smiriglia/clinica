@@ -3,13 +3,13 @@
         @if(estaViendoHorarios)
         {
             <div>
-                <h2>Horarios</h2>
+                <h2>{{ 'PROFILE.SCHEDULES' | translate }}</h2>
                 <p-table [tableStyle]="{ 'overflow': 'auto' }" [styleClass]="'small'" [value]="horariosDiaSemana" [tableStyle]="{ 'min-width': '50rem' }">
                     <ng-template pTemplate="header">
                         <tr>
-                            <th>Horas</th>
+                            <th>{{ 'PROFILE.SCHEDULES' | translate }}</th>
                             @for (dia of diaSemana; track $index) {
-                                <th>{{dia}}</th>
+                                <th>{{ ("DAYS_OF_WEEK." + dia) | translate }}</th>
                             }
                         </tr>
                     </ng-template>
@@ -45,53 +45,51 @@
                     </ng-template>
                 </p-table>
                 <div class="flex align-content-center justify-content-center gap-2 py-2">
-                    <p-button (onClick)="volver()" icon="pi pi-arrow-left" label="Volver"></p-button>
-                    <p-button (onClick)="clear()" icon="pi pi-eraser" label="Limpiar"></p-button>
-                    <p-button (onClick)="guardar()" icon="pi pi-save" label="Guardar"></p-button>
-
+                    <p-button (onClick)="volver()" icon="pi pi-arrow-left" label="{{ 'PROFILE.BACK' | translate }}"></p-button>
+                    <p-button (onClick)="clear()" icon="pi pi-eraser" label="{{ 'PROFILE.CLEAR' | translate }}"></p-button>
+                    <p-button (onClick)="guardar()" icon="pi pi-save" label="{{ 'PROFILE.SAVE' | translate }}"></p-button>
                 </div>
             </div>
-
         }
         @else {
-            <img [class.pointer]="user.role == 'paciente'" (click)="changeImage()" [src]="getImagen()" alt="imagen perfil">
+            <img [class.pointer]="user.role == 'paciente'" (click)="changeImage()" [src]="getImagen()" [alt]="'PROFILE.PROFILE_IMAGE_ALT' | translate">
             <div style="overflow: auto;">
                 <div>
                     <h2>{{user.nombre + ' ' + user.apellido}}</h2>
                     <hr>
                 </div>
                 <div>
-                    <h3 style="display: inline;">Rol:</h3>
+                    <h3 style="display: inline;">{{ 'PROFILE.ROLE' | translate }}:</h3>
                     {{user.role}}
                 </div>
                 <div>
-                    <h3 style="display: inline;">Edad:</h3>
+                    <h3 style="display: inline;">{{ 'PROFILE.AGE' | translate }}:</h3>
                     {{user.edad}}
                 </div>
                 <div>
-                    <h3 style="display: inline;">Email:</h3>
+                    <h3 style="display: inline;">{{ 'PROFILE.EMAIL' | translate }}:</h3>
                     {{user.email}}
                 </div>
                 <div>
-                    <h3 style="display: inline;">DNI:</h3>
+                    <h3 style="display: inline;">{{ 'PROFILE.DNI' | translate }}:</h3>
                     {{user.dni}}
                 </div>
                 @if(user.role == 'paciente') {
                     <div>
-                        <h3 style="display: inline;">Obra Social:</h3>
+                        <h3 style="display: inline;">{{ 'PROFILE.HEALTH_INSURANCE' | translate }}:</h3>
                         {{user['obraSocial']}}
                     </div>
                     <div class="flex align-content-center justify-content-center">
-                        <p-button (onClick)="verHistoriaClinica()" icon="pi pi-clock" label="Mi Historia Clinica"></p-button>
+                        <p-button (onClick)="verHistoriaClinica()" icon="pi pi-clock" label="{{ 'PROFILE.MY_MEDICAL_HISTORY' | translate }}"></p-button>
                     </div>
                 }
                 @if(user.role == 'especialista') {
                     <div>
-                        <h3 style="display: inline;">Especialidades:</h3>
+                        <h3 style="display: inline;">{{ 'PROFILE.SPECIALTIES' | translate }}:</h3>
                         {{user['especialidades']}}
                     </div>
                     <div class="flex align-content-center justify-content-center">
-                        <p-button (onClick)="verHorarios()" icon="pi pi-clock" label="Mis Horarios"></p-button>
+                        <p-button (onClick)="verHorarios()" icon="pi pi-clock" label="{{ 'PROFILE.MY_SCHEDULES' | translate }}"></p-button>
                     </div>
                 }
             </div>
@@ -100,7 +98,7 @@
 </div>
 
 <p-dialog 
-        header="Historia Clinica" 
+        header="{{ 'PROFILE.MY_MEDICAL_HISTORY' | translate }}" 
         [modal]="true" 
         [(visible)]="visibleHistoria" 
         [style]="{ width: '50rem' }" 

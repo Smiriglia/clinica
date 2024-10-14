@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { CardModule } from 'primeng/card';
 import { CarouselModule } from 'primeng/carousel';
 @Component({
@@ -7,6 +8,7 @@ import { CarouselModule } from 'primeng/carousel';
   imports: [
     CardModule,
     CarouselModule,
+    TranslateModule
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
