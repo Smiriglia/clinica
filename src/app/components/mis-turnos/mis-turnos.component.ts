@@ -149,7 +149,6 @@ export class MisTurnosComponent {
       return this.turnos.filter((turno) => {
         if (!turno.historiaClinica) return false;
 
-
         for (let datoDinamico of turno.historiaClinica.datosDinamicos) {
           if (datoDinamico.clave == this.campoAdicional) {
             let valor: string = `${datoDinamico.valor}`;
